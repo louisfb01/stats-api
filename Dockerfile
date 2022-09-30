@@ -6,6 +6,7 @@ FROM node:16
 WORKDIR /usr/src/app
 COPY ./ ./
 
+RUN rm -rf ./build
 RUN npm ci
 RUN npm run build
 
