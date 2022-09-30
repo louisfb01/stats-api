@@ -6,6 +6,9 @@
       "outDir": "./build",
       "esModuleInterop": true,
       "strict": true,
-    }
+    },
+    "include": [
+      "./src/**/*"
+    ],
   }
   
