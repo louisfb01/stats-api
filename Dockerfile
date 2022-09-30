@@ -3,12 +3,13 @@ FROM node:16
 WORKDIR /usr/src/app
 COPY ./ ./
 
-RUN npm ci
-RUN npm run build
-
 # Make build footprint version for easier debugging.
 RUN rm ./version.txt
 RUN openssl rand -hex 12 > version.txt
+
+RUN rm -rf ./build
+RUN npm ci
+RUN npm run build
 
 # Install local packages for running server.
 RUN npm install dotenv
