@@ -1,12 +1,8 @@
 FROM node:16
 
-### This docker file assumes that the npm build has already been run on the local host machine.
-### When run with the ./publish.sh script, this docker file has everything to built the image as lightly as possible.
-
 WORKDIR /usr/src/app
 COPY ./ ./
 
-RUN rm -rf ./build
 RUN npm ci
 RUN npm run build
 
@@ -19,4 +15,4 @@ RUN npm install dotenv
 RUN npm install pm2 -g
 
 EXPOSE 8082
-CMD ["pm2-runtime", "build/index.js"]
+CMD ["pm2-runtime","dist/server.js"]
