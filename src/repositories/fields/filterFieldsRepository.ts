@@ -20,9 +20,9 @@ function setFilterFieldTypes(filters: Filter[], response: any[], fieldsAndFieldR
         const fieldPathNormalized = fieldPathFormatter.formatPath(filter.path);
         let fieldType = response.map(r => r[fieldPathNormalized]).filter(v => v != null)[0] as string;
         const computedField = computedFields.get(fieldType)
-        if(computedField)
+        if (computedField)
             fieldType = computedField
-            
+
         const fieldInfo: FieldInfo = {
             name: filter.path,
             type: String(fieldType)
@@ -35,21 +35,21 @@ function setFilterFieldTypes(filters: Filter[], response: any[], fieldsAndFieldR
 async function getSelectorFieldInfos(selector: Selector, filterType: Map<Filter, FieldInfo | Error>) {
     try {
         if (selector.filters.length > 0) {
-            var filterTypesInSelector:boolean = true;
+            var filterTypesInSelector: boolean = true;
             selector.filters.filter(filter => {
-                if(!filter.type)
+                if (!filter.type)
                     filterTypesInSelector = false
             })
-            
-            if(filterTypesInSelector){
+
+            if (filterTypesInSelector) {
                 var selectorFilterTypes: any[] = [];
                 selector.filters.forEach(filter => {
                     const fieldPathNormalized = fieldPathFormatter.formatPath(filter.path);
-                    selectorFilterTypes.push({[fieldPathNormalized] : filter.type})
+                    selectorFilterTypes.push({ [fieldPathNormalized]: filter.type })
                 })
                 setFilterFieldTypes(selector.filters, selectorFilterTypes, filterType);
             }
-            else{
+            else {
                 const query = getFilterFieldTypesQuery.getQuery(selector);
                 const selectorFilterTypes = await aidboxProxy.executeQuery(query);
                 setFilterFieldTypes(selector.filters, selectorFilterTypes, filterType);
@@ -71,6 +71,7 @@ async function getSelectorFieldInfos(selector: Selector, filterType: Map<Filter,
 async function getFieldsDataFromRequest(summarizeRequest: SummarizeRequestBody): Promise<Map<Filter, FieldInfo | Error>> {
     const fieldsAndFieldReponses = new Map<Filter, FieldInfo | Error>();
 
+    console.log(11111, summarizeRequest)
     for (let selectorIndex = 0; selectorIndex < summarizeRequest.selectors.length; selectorIndex++) {
         const selector = summarizeRequest.selectors[selectorIndex];
         await getSelectorFieldInfos(selector, fieldsAndFieldReponses);
