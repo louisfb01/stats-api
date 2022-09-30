@@ -15,4 +15,4 @@ RUN npm install dotenv
 RUN npm install pm2 -g
 
 EXPOSE 8082
-CMD ["pm2-runtime","dist/server.js"]
+CMD ["pm2-runtime","build/server.js"]
