@@ -14,8 +14,6 @@ RUN openssl rand -hex 12 > version.txt
 # Install local packages for running server.
 RUN npm install dotenv
 RUN npm install pm2 -g
-RUN ls
-RUN cd ./build && ls
 
 EXPOSE 8082
-CMD ["pm2-runtime","build/server.js"]
+CMD ["pm2-runtime","build/index.js"]
