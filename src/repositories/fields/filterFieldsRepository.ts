@@ -71,7 +71,6 @@ async function getSelectorFieldInfos(selector: Selector, filterType: Map<Filter,
 async function getFieldsDataFromRequest(summarizeRequest: SummarizeRequestBody): Promise<Map<Filter, FieldInfo | Error>> {
     const fieldsAndFieldReponses = new Map<Filter, FieldInfo | Error>();
 
-    console.log(11111, summarizeRequest)
     for (let selectorIndex = 0; selectorIndex < summarizeRequest.selectors.length; selectorIndex++) {
         const selector = summarizeRequest.selectors[selectorIndex];
         await getSelectorFieldInfos(selector, fieldsAndFieldReponses);

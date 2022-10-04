@@ -23,7 +23,7 @@ async function exectuteQuery(queryDataResults: QueryDataResults,
 
     const fieldType = fieldTypes.get(field);
     if (!fieldType) throw new Error('No matching field type for field');
-    
+
     const isContinousMeasure = contants.numericalTypes.some(nt => nt === fieldType.type)
     const queryBuilder = isContinousMeasure
         ? measureTypeQuery.get("continuous")
@@ -33,9 +33,9 @@ async function exectuteQuery(queryDataResults: QueryDataResults,
     const query = queryBuilder.getQuery(selector, field, filterFieldTypes, fieldTypes, measures);
 
     console.warn(query);
-    
+
     const queryResult = await aidboxProxy.executeQuery(query);
-    
+
     mapResultsbyMeasure(queryDataResults, selector, field, measures, isContinousMeasure, queryResult, query)
 
 }
@@ -45,24 +45,25 @@ function mapResultsbyMeasure(queryDataResults: QueryDataResults,
     field: Field,
     measures: Measures,
     isContinousMeasure: Boolean,
-    queryResult:any,
-    query: string){
-    if(isContinousMeasure){
-        for(let measureIndex = 0; measureIndex<measures.continuous.length; measureIndex++){
+    queryResult: any,
+    query: string) {
+    if (isContinousMeasure) {
+        for (let measureIndex = 0; measureIndex < measures.continuous.length; measureIndex++) {
             let measure = measures.continuous[measureIndex]
+            console.log(3333, queryResult)
             let fieldResult = {}
-            switch(measure){
+            switch (measure) {
                 case 'count':
-                    fieldResult = {sum: queryResult[0].sum}
+                    fieldResult = { sum: queryResult[0].sum }
                     break
                 case 'mean':
-                    fieldResult  = {count:queryResult[0].count, mean:queryResult[0].mean}
+                    fieldResult = { count: queryResult[0].count, mean: queryResult[0].mean }
                     break
                 case 'stdev':
-                    fieldResult  = {stddev:queryResult[0].stddev}
+                    fieldResult = { stddev: queryResult[0].stddev }
                     break
                 case 'ci95':
-                    fieldResult  = {ci_low:queryResult[0].ci_low, ci_high:queryResult[0].ci_high}
+                    fieldResult = { ci_low: queryResult[0].ci_low, ci_high: queryResult[0].ci_high }
             }
 
             queryDataResults.addResult(selector, field, measure, {
@@ -72,7 +73,7 @@ function mapResultsbyMeasure(queryDataResults: QueryDataResults,
         }
     }
     else {
-        for(let measureIndex = 0; measureIndex<measures.categorical.length; measureIndex++){
+        for (let measureIndex = 0; measureIndex < measures.categorical.length; measureIndex++) {
             let measure = measures.categorical[measureIndex]
 
             queryDataResults.addResult(selector, field, measure, {
