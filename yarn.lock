@@ -1599,10 +1599,10 @@
   dependencies:
     "webidl-conversions" "^5.0.0"
 
-"dotenv@^8.2.0":
-  "integrity" "sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw=="
-  "resolved" "https://registry.npmjs.org/dotenv/-/dotenv-8.2.0.tgz"
-  "version" "8.2.0"
+"dotenv@^8.6.0":
+  "integrity" "sha512-IrPdXQsk2BbzvCBGBOTmmSH5SodmqZNt4ERAZDmW4CT+tL8VtvinqywuANaFu4bOMWki16nqf0e4oC0QIaDr/g=="
+  "resolved" "https://registry.npmjs.org/dotenv/-/dotenv-8.6.0.tgz"
+  "version" "8.6.0"
 
 "dtrace-provider@~0.8":
   "integrity" "sha512-b7Z7cNtHPhH9EJhNNbbeqTcXB8LGFFZhq1PGgEvpeHlzd36bhbdTWoE/Ba/YguqpBSlAPKnARWhVlhunCMwfxg=="

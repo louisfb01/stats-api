@@ -8,11 +8,13 @@
     "start": "cross-env NODE_ENV=development nodemon index.ts",
     "test": "jest --watch",
     "build": "tsc --project ./",
-    "clear-jest": "jest --clearCache"
+    "clear-jest": "jest --clearCache",
+    "caprover:setup": "node ./caprover/setup.js",
+    "caprover:deploy": "node ./caprover/deploy.js"
   },
   "dependencies": {
     "axios": "^0.21.1",
-    "dotenv": "^8.2.0",
+    "dotenv": "^8.6.0",
     "express": "^4.17.1",
     "gauss-random": "^1.0.1",
     "http-errors": "^1.8.0",
