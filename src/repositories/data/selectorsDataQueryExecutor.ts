@@ -18,12 +18,18 @@ async function executeQueries(queryDataResults: QueryDataResults,
 
     await getTotalCount(queryDataResults, selector, filterTypes, fieldTypes);
 
-    await getBreakdownResult(queryDataResults, selector, filterTypes, fieldTypes)
-
     await getFieldsDataQueryExecutor(queryDataResults, selector, measures, fieldTypes, filterTypes, selector)
 }
 
-async function getTotalCount(queryDataResults: QueryDataResults,selector: Selector, filterTypes: Map<Filter, FieldInfo>, fieldTypes: Map<Field, FieldInfo>){
+async function executeBreakdownQuery(queryDataResults: QueryDataResults,
+    selector: Selector,
+    fieldTypes: Map<Field, FieldInfo>,
+    filterTypes: Map<Filter, FieldInfo>): Promise<void> {
+
+    await getBreakdownResult(queryDataResults, selector, filterTypes, fieldTypes)
+}
+
+async function getTotalCount(queryDataResults: QueryDataResults, selector: Selector, filterTypes: Map<Filter, FieldInfo>, fieldTypes: Map<Field, FieldInfo>) {
     const countQuery = countResourceQuery.getQuery(selector, filterTypes, fieldTypes);
     console.warn(countQuery);
 
@@ -32,15 +38,15 @@ async function getTotalCount(queryDataResults: QueryDataResults,selector: Select
     return queryDataResults
 }
 
-async function getBreakdownResult(queryDataResults: QueryDataResults, selector: Selector, filterTypes: Map<Filter, FieldInfo>, fieldTypes: Map<Field, FieldInfo>){
-    if(selector.breakdown){
+async function getBreakdownResult(queryDataResults: QueryDataResults, selector: Selector, filterTypes: Map<Filter, FieldInfo>, fieldTypes: Map<Field, FieldInfo>) {
+    if (selector.breakdown) {
         var breakdownQuery: string
-        if(selector.breakdown.query){
+        if (selector.breakdown.query) {
             breakdownQuery = selector.breakdown.query
         }
-        else{
-            breakdownQuery = selector.breakdown.resource.fieldType == 'dateTime' ? 
-            timeBreakdownQuery.getQuery(selector, filterTypes, fieldTypes) : continuousBreakdownQuery.getQuery(selector, filterTypes, fieldTypes);
+        else {
+            breakdownQuery = selector.breakdown.resource.fieldType == 'dateTime' ?
+                timeBreakdownQuery.getQuery(selector, filterTypes, fieldTypes) : continuousBreakdownQuery.getQuery(selector, filterTypes, fieldTypes);
         }
         console.warn(breakdownQuery);
         const breakdownResult = await aidboxProxy.executeQuery(breakdownQuery) as any[];
@@ -57,7 +63,7 @@ async function getFieldsDataQueryExecutor(
     filterTypes: Map<Filter, FieldInfo>,
     topSelector: Selector) {
 
-    if(selector.joins){
+    if (selector.joins) {
         await getFieldsDataQueryExecutor(queryDataResults, selector.joins, measures, fieldTypes, filterTypes, topSelector)
     }
 
@@ -65,9 +71,9 @@ async function getFieldsDataQueryExecutor(
         const field = selector.fields[fieldIndex];
         await fieldsDataQueryExecutor.executeQueries(queryDataResults, topSelector, measures, field, fieldTypes, filterTypes);
     }
-    
+
 }
 
 export default {
-    executeQueries
+    executeQueries, executeBreakdownQuery
 }

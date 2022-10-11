@@ -51,6 +51,23 @@ async function getStats(summarizeRequest: SummarizeRequestBody) {
     return response;
 }
 
+async function getBreakdown(summarizeRequest: SummarizeRequestBody) {
+    const { filterRequestErrors, filterFields } = await getFilterTypesAndErrors(summarizeRequest);
+
+    if (filterRequestErrors.length > 0) return filterRequestErrors;
+    const filterFieldsNoErrors = new Map<Filter, FieldInfo>(filterFields as any);
+    
+    const { fieldRequestErrors, fields } = await getFieldTypeAndErrors(summarizeRequest, filterFieldsNoErrors);
+
+    if (fieldRequestErrors.length > 0) return fieldRequestErrors;
+    const fieldsNoErrors = new Map<Field, FieldInfo>(fields as any);
+    const queryDataResults = await queryDataRepository.executeBreakdownQueries(summarizeRequest, fieldsNoErrors, filterFieldsNoErrors);
+    const response = dataReponseProcessor.getBreakdownReponses(summarizeRequest, queryDataResults);
+
+    console.warn(response);
+    return response;
+}
+
 export default {
-    getStats
+    getStats, getBreakdown
 }

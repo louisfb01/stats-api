@@ -22,6 +22,23 @@ async function executeQueries(summarizeRequest: SummerizeRequestBody,
     return queryDataResults;
 }
 
+async function executeBreakdownQueries(summarizeRequest: SummerizeRequestBody,
+    fieldTypes: Map<Field, FieldInfo>,
+    filterTypes: Map<Filter, FieldInfo>): Promise<QueryDataResults> {
+
+    const queryDataResults = new QueryDataResults();
+
+    const measures = summarizeRequest.options.measures;
+
+    // Use for instead of forEach for promise syncing
+    for (let selectorIndex = 0; selectorIndex < summarizeRequest.selectors.length; selectorIndex++) {
+        const selector = summarizeRequest.selectors[selectorIndex];
+        await selectorsDataQueryExecutor.executeBreakdownQuery(queryDataResults, selector, fieldTypes, filterTypes);
+    }
+
+    return queryDataResults;
+}
+
 export default {
-    executeQueries
+    executeQueries, executeBreakdownQueries
 }

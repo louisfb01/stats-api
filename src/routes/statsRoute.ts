@@ -17,4 +17,17 @@ router.post('/summarize', async (req, res, next) => {
     }
 });
 
+router.post('/summarizeBreakdown', async (req, res, next) => {
+    try {
+        const body: SummarizeRequestBody = req.body;
+        console.log(body)
+        const response = await statsServices.getBreakdown(body);
+        res.send(response);
+    }
+    catch (error) {
+        console.error({error})
+        next(error);
+    }
+});
+
 export default router;

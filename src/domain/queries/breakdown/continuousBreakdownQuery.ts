@@ -1,20 +1,20 @@
 import FieldInfo from "../../../models/fieldInfo";
+import BreakdownResource from "../../../models/request/breakdownResource";
 import Field from "../../../models/request/field";
 import Filter from "../../../models/request/filter";
 import Selector from "../../../models/request/selector";
 import fieldLabelFormatter from "../fieldLabelFormatter";
-import arrayFieldDetector from "../fields/arrayFieldDetector";
 import SqlBuilder from "../sqlBuilder/sqlBuilder";
 
 function getQuery(selector: Selector,
     filterTypes: Map<Filter, FieldInfo>,
     fieldTypes: Map<Field, FieldInfo>): string {
-        
+
     if (!selector.breakdown) throw new Error('Must have breakdown');
 
-    const breakdownField = selector.breakdown.resource.field;
-    const breakdownFieldLabel = findLabel(breakdownField, selector)
-    
+    const breakdownField = selector.breakdown.resource;
+    const breakdownFieldLabel = fieldLabelFormatter.formatLabel(findField(breakdownField, selector).label)
+
     const step = selector.breakdown?.slices.step;
     const max = parseInt(selector.breakdown?.slices.max);
     const min = parseInt(selector.breakdown?.slices.min);
@@ -32,19 +32,30 @@ function getQuery(selector: Selector,
     return sqlBuilder.build(selector, filterTypes)
 }
 
-function findLabel(breakdownField: string, selector: Selector): string{
-    const label = selector.fields.find(field => {
-        return field.path == breakdownField;
-    })?.label
+function findField(breakdown: BreakdownResource, selector: Selector): Field {
+    var field = selector.fields.find(field => {
+        return field.path == breakdown.field;
+    })
 
-    if(label){ 
-        return fieldLabelFormatter.formatLabel(label)
+    if (field) {
+        return field
     }
-    else if(selector.joins){
-        return findLabel(breakdownField, selector.joins)
+    else if (selector.joins) {
+        return findField(breakdown, selector.joins)
     }
-    else{
-        return ''
+    else {
+        field = {
+            path: breakdown.field,
+            label: `${breakdown.field}Breakdown`,
+            type: breakdown.fieldType
+        }
+        selector.joins = {
+            resource: breakdown.type,
+            label: `${breakdown.type}Breakdown`,
+            filters: [],
+            fields: [field]
+        }
+        return field
     }
 }
 

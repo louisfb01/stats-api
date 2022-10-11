@@ -50,7 +50,6 @@ function mapResultsbyMeasure(queryDataResults: QueryDataResults,
     if (isContinousMeasure) {
         for (let measureIndex = 0; measureIndex < measures.continuous.length; measureIndex++) {
             let measure = measures.continuous[measureIndex]
-            console.log(3333, queryResult)
             let fieldResult = {}
             switch (measure) {
                 case 'count':
