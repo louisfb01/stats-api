@@ -16,6 +16,12 @@ function calculate(selector: Selector,
     const fieldLabelNormalized = fieldLabelFormatter.formatLabel(field.label);
 
     const discreteVariableCounts = new Array<DiscreteVariableCountReponse>();
+
+    if(countResults.length == 0){
+        const discreteVariableCounts  = [{ label: fieldLabelNormalized, value: 0 }];
+        return discreteVariableCounts;
+    }
+
     countResults.forEach(countResult => {
         const discreteVariableCount: DiscreteVariableCountReponse = {
             label: countResult[fieldLabelNormalized],

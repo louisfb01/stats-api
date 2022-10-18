@@ -1,6 +1,7 @@
 import contants from "../../constants";
 import continuousQuery from "../../domain/queries/calculation/continuous/continuousQuery";
 import groupCountQuery from "../../domain/queries/calculation/discrete/groupCountQuery";
+import dateCountQuery from "../../domain/queries/calculation/discrete/dateCountQuery";
 import QueryDataResults from "../../domain/queries/queryDataResults";
 import aidboxProxy from "../../infrastructure/aidbox/aidboxProxy";
 import FieldInfo from "../../models/fieldInfo";
@@ -12,6 +13,7 @@ import Measures from "../../models/request/measures";
 const measureTypeQuery = new Map<string, { getQuery: (selector: Selector, field: Field, filterFieldTypes: Map<Filter, FieldInfo>, fieldTypes: Map<Field, FieldInfo>, measures: Measures) => string }>();
 measureTypeQuery.set("continuous", continuousQuery);
 measureTypeQuery.set("categorical", groupCountQuery);
+measureTypeQuery.set("dateTime", dateCountQuery);
 
 
 async function exectuteQuery(queryDataResults: QueryDataResults,
@@ -25,9 +27,12 @@ async function exectuteQuery(queryDataResults: QueryDataResults,
     if (!fieldType) throw new Error('No matching field type for field');
 
     const isContinousMeasure = contants.numericalTypes.some(nt => nt === fieldType.type)
+    const isDateTimeMeasure = fieldType.type == "DATE";
     const queryBuilder = isContinousMeasure
         ? measureTypeQuery.get("continuous")
-        : measureTypeQuery.get("categorical");
+        : isDateTimeMeasure 
+            ? measureTypeQuery.get("dateTime") 
+            : measureTypeQuery.get("categorical");
 
     if (!queryBuilder) throw new Error('Not a valid measure');
     const query = queryBuilder.getQuery(selector, field, filterFieldTypes, fieldTypes, measures);

@@ -45,7 +45,7 @@ function getJoinFieldResponse(selector: Selector,
         getJoinFieldResponse(selector.joins, measures, queryDataResults, fieldTypes, fieldResponses, topSelector)
     }
 
-    selector.fields.filter(f => f.type != "dateTime").map(f => {
+    selector.fields.map(f => {
         fieldResponses.push(fieldReponseProcessor.getFieldReponse(topSelector, f, measures, queryDataResults, fieldTypes));
     });
 }
