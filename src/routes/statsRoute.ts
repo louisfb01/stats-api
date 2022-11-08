@@ -11,8 +11,8 @@ router.post('/summarize', async (req, res, next) => {
         const response = await statsServices.getStats(body);
         res.send(response);
     }
-    catch (error) {
-        console.error({error})
+    catch (error:any) {
+        console.error(error.stack)
         next(error);
     }
 });

@@ -14,7 +14,7 @@ function errorHandler(err: any, req: any, res: any, next: any) {
     const errorFormatted = { 
         statsApiVersion: version.getBuildVersion(),
         stackTrace: (err).stack,
-        config: getConfigFormatted(err)
+        //config: getConfigFormatted(err)
     }
 
     res.status(500).send(errorFormatted);
