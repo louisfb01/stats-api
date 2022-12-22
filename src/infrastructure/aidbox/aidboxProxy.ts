@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const instance = axios.create({
-    baseURL: 'http://' + process.env.CODA_FHIR_STORE_HOST
+    baseURL: process.env.CODA_FHIR_STORE_URL
 });
 
 const client = {
@@ -25,7 +25,7 @@ async function executeQuery(query: string): Promise<any> {
     }
     catch (error: any) {
         if (axios.isAxiosError(error) && error.response)
-            error.message = JSON.stringify({query:query, error:error.response.data})
+            error.message = JSON.stringify({ query: query, error: error.response.data })
         throw error
     }
 }

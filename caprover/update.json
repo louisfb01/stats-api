@@ -5,8 +5,8 @@
     "forceSsl": true,
     "envVars": [
         {
-            "key": "CODA_FHIR_STORE_HOST",
-            "value": "$CODA_FHIR_STORE_HOST"
+            "key": "CODA_FHIR_STORE_URL",
+            "value": "$CODA_FHIR_STORE_URL"
         },
         {
             "key": "CODA_STATS_API_PORT",

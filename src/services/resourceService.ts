@@ -99,7 +99,7 @@ function getAidboxResource(type: string, attr: string): Promise<any[]> {
     return new Promise((resolve, reject) => {
         // FIXME(malavv): This code needs to be finalized.
         // TODO: fill these out with the appropriate info
-        const aidboxUrl = 'http://' + process.env.CODA_FHIR_STORE_HOST;
+        const aidboxUrl = process.env.CODA_FHIR_STORE_URL;
         //const aidboxToken = process.env.CODA_FHIR_STORE_TOKEN;
 
         // TODO: verify that resourceType and resourceAttribute are whitelisted
