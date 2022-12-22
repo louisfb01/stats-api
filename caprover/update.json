@@ -5,24 +5,24 @@
     "forceSsl": true,
     "envVars": [
         {
+            "key": "CODA_FHIR_STORE_HOST",
+            "value": "$CODA_FHIR_STORE_HOST"
+        },
+        {
             "key": "CODA_STATS_API_PORT",
             "value": "$CODA_STATS_API_PORT"
         },
         {
-            "key": "CODA_STATS_API_FAKE_AIDBOX",
-            "value": "$CODA_STATS_API_FAKE_AIDBOX"
+            "key": "CODA_STATS_API_FHIR_STORE_CLIENT_ID",
+            "value": "$CODA_STATS_API_FHIR_STORE_CLIENT_ID"
         },
         {
-            "key": "CODA_STATS_API_AIDBOX_URL",
-            "value": "$CODA_STATS_API_AIDBOX_URL"
+            "key": "CODA_STATS_API_FHIR_STORE_CLIENT_SECRET",
+            "value": "$CODA_STATS_API_FHIR_STORE_CLIENT_SECRET"
         },
         {
-            "key": "CODA_STATS_API_CLIENT_ID",
-            "value": "$CODA_STATS_API_CLIENT_ID"
-        },
-        {
-            "key": "CODA_STATS_API_CLIENT_SECRET",
-            "value": "$CODA_STATS_API_CLIENT_SECRET"
+            "key": "CODA_STATS_API_FHIR_STORE_MOCKED",
+            "value": "$CODA_STATS_API_FHIR_STORE_MOCKED"
         }
     ]
 }

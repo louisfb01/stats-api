@@ -1,12 +1,12 @@
 import axios from 'axios';
 
 const instance = axios.create({
-    baseURL: process.env.CODA_STATS_API_AIDBOX_URL
+    baseURL: 'http://' + process.env.CODA_FHIR_STORE_HOST
 });
 
 const client = {
-    id: process.env.CODA_STATS_API_CLIENT_ID,
-    secret: process.env.CODA_STATS_API_CLIENT_SECRET
+    id: process.env.CODA_STATS_API_FHIR_STORE_CLIENT_ID,
+    secret: process.env.CODA_STATS_API_FHIR_STORE_CLIENT_SECRET
 }
 
 const authEncoded = Buffer.from(`${client.id}:${client.secret}`).toString('base64');

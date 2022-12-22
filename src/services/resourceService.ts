@@ -12,9 +12,9 @@ import { Dictionary } from 'underscore';
  * @param attr Resource attribute
  */
 export async function getResourceData(type: string, attr: string): Promise<Array<string | number>> {
-    console.log('The configuration for mocked data is FAKE_AIDBOX:', process.env.CODA_STATS_API_FAKE_AIDBOX);
+    console.log('The configuration for mocked data is FAKE_AIDBOX:', process.env.CODA_STATS_API_FHIR_STORE_MOCKED);
 
-    const fakeAidboxEnvVariable = process.env.CODA_STATS_API_FAKE_AIDBOX ? process.env.CODA_STATS_API_FAKE_AIDBOX : 'true';
+    const fakeAidboxEnvVariable = process.env.CODA_STATS_API_FHIR_STORE_MOCKED ? process.env.CODA_STATS_API_FHIR_STORE_MOCKED : 'true';
     const fakeAidbox = JSON.parse(fakeAidboxEnvVariable);
     return (fakeAidbox ? getMockedResource : getAidboxResource)(type, attr);
 }
@@ -99,8 +99,8 @@ function getAidboxResource(type: string, attr: string): Promise<any[]> {
     return new Promise((resolve, reject) => {
         // FIXME(malavv): This code needs to be finalized.
         // TODO: fill these out with the appropriate info
-        const aidboxUrl = process.env.CODA_STATS_API_AIDBOX_URL;
-        const aidboxToken = process.env.CODA_STATS_API_AIDBOX_TOKEN;
+        const aidboxUrl = 'http://' + process.env.CODA_FHIR_STORE_HOST;
+        //const aidboxToken = process.env.CODA_FHIR_STORE_TOKEN;
 
         // TODO: verify that resourceType and resourceAttribute are whitelisted
 
@@ -113,7 +113,7 @@ function getAidboxResource(type: string, attr: string): Promise<any[]> {
             headers: {
                 'accept': 'application/json',
                 'Content-type': 'application/json',
-                'Authorization': `Bearer ${aidboxToken}`
+                //'Authorization': `Bearer ${aidboxToken}`
             }
         }
 
