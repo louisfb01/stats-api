@@ -16,8 +16,8 @@ function getQuery(selector: Selector,
     const breakdownFieldLabel = fieldLabelFormatter.formatLabel(findField(breakdownField, selector).label)
 
     const step = breakdown?.slices.step;
-    const max = parseInt(breakdown?.slices.max);
-    const min = parseInt(breakdown?.slices.min);
+    const max = parseFloat(breakdown?.slices.max);
+    const min = parseFloat(breakdown?.slices.min);
 
     const sqlBuilder = new SqlBuilder()
         .select()

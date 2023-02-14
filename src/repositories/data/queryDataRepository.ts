@@ -3,6 +3,7 @@ import FieldInfo from "../../models/fieldInfo";
 import Field from "../../models/request/field";
 import Filter from "../../models/request/filter";
 import SummerizeRequestBody from "../../models/request/summarizeRequestBody";
+import breakdownDataQueryExecutor from "./breakdownDataQueryExecutor";
 import selectorsDataQueryExecutor from "./selectorsDataQueryExecutor";
 
 async function executeQueries(summarizeRequest: SummerizeRequestBody,
@@ -28,14 +29,12 @@ async function executeBreakdownQueries(summarizeRequest: SummerizeRequestBody,
 
     const queryDataResults = new QueryDataResults();
 
-    const measures = summarizeRequest.options.measures;
-
     // Use for instead of forEach for promise syncing
     for (let selectorIndex = 0; selectorIndex < summarizeRequest.selectors.length; selectorIndex++) {
         const selector = summarizeRequest.selectors[selectorIndex];
         const breakdown = summarizeRequest.options.breakdown;
         if(breakdown){
-            await selectorsDataQueryExecutor.executeBreakdownQuery(queryDataResults, selector, fieldTypes, filterTypes, breakdown);
+            await breakdownDataQueryExecutor.executeBreakdownQuery(queryDataResults, selector, fieldTypes, filterTypes, breakdown);
         }
     }
 
