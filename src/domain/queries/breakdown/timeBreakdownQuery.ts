@@ -1,4 +1,5 @@
 import FieldInfo from "../../../models/fieldInfo";
+import Breakdown from "../../../models/request/breakdown";
 import Field from "../../../models/request/field";
 import Filter from "../../../models/request/filter";
 import Selector from "../../../models/request/selector";
@@ -9,16 +10,16 @@ import SqlBuilder from "../sqlBuilder/sqlBuilder";
 
 function getQuery(selector: Selector,
     filterTypes: Map<Filter, FieldInfo>,
-    fieldTypes: Map<Field, FieldInfo>): string {
+    fieldTypes: Map<Field, FieldInfo>,
+    breakdown: Breakdown): string {
 
-    if (!selector.breakdown) throw new Error('Must have breakdown');
-
-    const breakdownField = selector.breakdown.resource.field;
-    const breakdownFieldLabel = findLabel(breakdownField, selector)
+    const breakdownField = breakdown.resource.field;
+    const breakdownFieldLabel = findLabel(breakdownField, selector);
+    const step = breakdown.slices.step;
 
     const sqlBuilder = new SqlBuilder()
         .select()
-        .breakdownPeriodStart(breakdownFieldLabel)
+        .breakdownPeriodStart(step, breakdownFieldLabel)
         .comma()
         .namedCountAll('count_in_period')
         .from()

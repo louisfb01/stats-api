@@ -36,6 +36,18 @@ joinIdData.set("medicationadministration", {
     fromSelectorTableId: ".resource->'subject'->>'id'",
 })
 
+joinIdData.set("imagingstudy", {
+    selectInJoinId: "resource->'subject'->>'id' AS subject_id",
+    joinTableId: ".subject_id",
+    fromSelectorTableId: ".resource->'subject'->>'id'",
+})
+
+joinIdData.set("location", {
+    selectInJoinId: "id",
+    joinTableId: ".id",
+    fromSelectorTableId: ".id",
+})
+
 joinIdData.set("encounter_location", {
     selectInJoinId: "id",
     joinCrossJoin: "CROSS JOIN LATERAL jsonb_array_elements(",

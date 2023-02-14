@@ -33,7 +33,10 @@ async function executeBreakdownQueries(summarizeRequest: SummerizeRequestBody,
     // Use for instead of forEach for promise syncing
     for (let selectorIndex = 0; selectorIndex < summarizeRequest.selectors.length; selectorIndex++) {
         const selector = summarizeRequest.selectors[selectorIndex];
-        await selectorsDataQueryExecutor.executeBreakdownQuery(queryDataResults, selector, fieldTypes, filterTypes);
+        const breakdown = summarizeRequest.options.breakdown;
+        if(breakdown){
+            await selectorsDataQueryExecutor.executeBreakdownQuery(queryDataResults, selector, fieldTypes, filterTypes, breakdown);
+        }
     }
 
     return queryDataResults;

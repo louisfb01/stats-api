@@ -154,21 +154,15 @@ export default class SelectSqlBuilder {
         return this;
     }
 
-    breakdownPeriodStart(breakdownFieldLabel: string) {
-        const builderFunction = (selector: Selector) => {
-            if (!selector.breakdown) throw new Error('Must have breakdown');
-            return selectBreakdownPeriodStartBuilder.build(selector.breakdown,breakdownFieldLabel);
-        }
+    breakdownPeriodStart(step: number, breakdownFieldLabel: string) {
+        const builderFunction = () => selectBreakdownPeriodStartBuilder.build(step ,breakdownFieldLabel);
         this.sqlBuilder.requestBuilders.push(builderFunction);
 
         return this;
     }
 
     breakdownContinuous(step: number, min: number , max: number, breakdownFieldLabel: string) {
-        const builderFunction = (selector: Selector) => {
-            if (!selector.breakdown) throw new Error('Must have breakdown');
-            return selectBreakdownContinuousBuilder.build(step, min, max, breakdownFieldLabel);
-        }
+        const builderFunction = () => selectBreakdownContinuousBuilder.build(step, min, max, breakdownFieldLabel);
         this.sqlBuilder.requestBuilders.push(builderFunction);
 
         return this;

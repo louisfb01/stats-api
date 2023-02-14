@@ -25,9 +25,14 @@ function getSummarizeReponses(summarizeRequest: SummarizeRequestBody,
 }
 
 function getBreakdownReponses(summarizeRequest: SummarizeRequestBody, queryDataResults: QueryDataResults): breakdownResponse {
-
-    const breakdownReponse = summarizeReponseProcessor.getBreakdownReponse(summarizeRequest.selectors[0], queryDataResults);
-    return breakdownReponse;
+    if(summarizeRequest.options.breakdown){
+        const breakdownReponse = summarizeReponseProcessor.getBreakdownReponse(summarizeRequest.selectors[0], queryDataResults, summarizeRequest.options.breakdown);
+        return breakdownReponse;
+    }
+    else {
+        const countQueryAndResult = queryDataResults.getSelectorBreakdownResult(summarizeRequest.selectors[0]);
+        return { query: countQueryAndResult.query, result: [{ periodStart: '', periodCount: null }], field: '', fieldType: '' };
+    }
 }
 
 export default {

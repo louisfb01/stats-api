@@ -9,6 +9,7 @@ import BreakdownResponse from "../../models/response/breakdownResponse";
 import timeBreakdownCalculator from "./breakdown/timeBreakdownCalculator";
 import FieldReponse from "../../models/response/fieldResponse";
 import continuousBreakdownCalculator from "./breakdown/continuousBreakdownCalculator";
+import Breakdown from "../../models/request/breakdown";
 
 function getSummarizeReponse(selector: Selector,
     measures: Measures,
@@ -50,19 +51,14 @@ function getJoinFieldResponse(selector: Selector,
     });
 }
 
-function getBreakdownReponse(selector: Selector, queryDataResults: QueryDataResults) {
+function getBreakdownReponse(selector: Selector, queryDataResults: QueryDataResults, breakdown: Breakdown) {
 
-
-    const countQueryAndResult = queryDataResults.getSelectorBreakdownResult(selector);
-
-    if (!selector.breakdown) return { query: countQueryAndResult.query, result: [{ periodStart: '', periodCount: null }], field: '', fieldType: '' };
-
-    if (selector.breakdown.resource.fieldType == "dateTime") {
-        const breakdownResult = timeBreakdownCalculator.calculate(selector, queryDataResults);
+    if (breakdown.resource.fieldType == "dateTime") {
+        const breakdownResult = timeBreakdownCalculator.calculate(selector, queryDataResults, breakdown);
         return breakdownResult;
     }
     else {
-        const breakdownResult = continuousBreakdownCalculator.calculate(selector, queryDataResults);
+        const breakdownResult = continuousBreakdownCalculator.calculate(selector, queryDataResults, breakdown);
         return breakdownResult;
     }
 }
