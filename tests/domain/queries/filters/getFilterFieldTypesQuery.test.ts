@@ -6,14 +6,14 @@ import filterObjectMother from "../../../utils/objectMothers/models/filterObject
 import selectorObjectMother from "../../../utils/objectMothers/models/selectorObjectMother";
 
 describe('getFilterFieldTypesQuery tests', () => {
-    const filterA = filterObjectMother.get('fieldA', 'is', 'value');
-    const filterB = filterObjectMother.get('fieldB', 'is', 'value');
+    const filterA = filterObjectMother.get('fieldA', 'is', 'value', 'type');
+    const filterB = filterObjectMother.get('fieldB', 'is', 'value', 'type');
 
     const filterTypes = new Map<Filter, FieldInfo>();
 
     it('gets query with field queries and resource from', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', [], [filterA, filterB]);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], [filterA, filterB]);
 
         // ACT
         const query = getFilterFieldTypesQuery.getQuery(selector);
@@ -30,7 +30,7 @@ describe('getFilterFieldTypesQuery tests', () => {
 
     it('escapes resource to avoid sql injections', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get("Patient'--drop", [], [filterA, filterB]);
+        const selector = selectorObjectMother.get("Patient'--drop", 'patient', [], [filterA, filterB]);
 
         // ACT
         const query = getFilterFieldTypesQuery.getQuery(selector);

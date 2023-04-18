@@ -5,8 +5,8 @@ import resourceArrayFields from "../../../../../src/domain/resourceArrayFields";
 import fieldObjectMother from "../../../../utils/objectMothers/models/fieldObjectMother";
 
 describe('fromCrossJoinBuilder tests', () => {
-    const genderFilter = filterObjectMother.get('gender', 'is', 'male');
-    const cityFilter = filterObjectMother.get('address.city', 'is', 'Quebec');
+    const genderFilter = filterObjectMother.get('gender', 'is', 'male', 'string');
+    const cityFilter = filterObjectMother.get('address.city', 'is', 'Quebec', 'string');
 
     beforeEach(() => {
         resourceArrayFields.values = [];
@@ -14,7 +14,7 @@ describe('fromCrossJoinBuilder tests', () => {
 
     it('with one field array type, array element is last path element, field is added in CROSS JOIN LATERAL', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', [], [genderFilter, cityFilter]);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], [genderFilter, cityFilter]);
 
         resourceArrayFields.values = ["address.city"];
 
@@ -27,8 +27,8 @@ describe('fromCrossJoinBuilder tests', () => {
 
     it('with one field array type, with field and no filter, array element is last path element, field is added in CROSS JOIN LATERAL', () => {
         // ARRANGE
-        const addressCityField = fieldObjectMother.get('address.city');
-        const selector = selectorObjectMother.get('Patient', [], [genderFilter]);
+        const addressCityField = fieldObjectMother.get('address.city', 'address_city' ,'string');
+        const selector = selectorObjectMother.get('Patient', 'patient', [], [genderFilter]);
 
         resourceArrayFields.values = ["address.city"];
 
@@ -41,7 +41,7 @@ describe('fromCrossJoinBuilder tests', () => {
 
     it('with one field array type, array element is first path element, only array portion is in CROSS JOIN', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', [], [genderFilter, cityFilter]);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], [genderFilter, cityFilter]);
 
         resourceArrayFields.values = ["address"];
 
@@ -54,7 +54,7 @@ describe('fromCrossJoinBuilder tests', () => {
 
     it('with two fields array types, field are added in CROSS JOIN LATERAL', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', [], [genderFilter, cityFilter]);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], [genderFilter, cityFilter]);
 
         resourceArrayFields.values = ["address.city", "gender"];
 
@@ -67,7 +67,7 @@ describe('fromCrossJoinBuilder tests', () => {
 
     it('with two arrays in field, two cross joins are generated', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', [], [genderFilter, cityFilter]);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], [genderFilter, cityFilter]);
 
         resourceArrayFields.values = ["address", "address.city"];
 

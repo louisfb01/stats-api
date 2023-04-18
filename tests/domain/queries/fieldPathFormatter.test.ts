@@ -9,7 +9,7 @@ describe('fieldPathFormatter tests', () => {
 
     it('with no sub path, returns field path', () => {
         // ARRANGE
-        const field = fieldObjectMother.get('gender');
+        const field = fieldObjectMother.get('gender', 'gender', 'string');
 
         // ACT
         const pathCompiled = fieldPathFormatter.formatPath(field.path);
@@ -20,7 +20,7 @@ describe('fieldPathFormatter tests', () => {
 
     it('with sub path replaces . with _', () => {
         // ARRANGE
-        const field = fieldObjectMother.get('address.country');
+        const field = fieldObjectMother.get('address.country', 'country', 'string');
 
         // ACT
         const pathCompiled = fieldPathFormatter.formatPath(field.path);
@@ -31,7 +31,7 @@ describe('fieldPathFormatter tests', () => {
 
     it('with two level sub path replaces . with _', () => {
         // ARRANGE
-        const field = fieldObjectMother.get('address.country.name');
+        const field = fieldObjectMother.get('address.country.name', 'country_name', 'string');
 
         // ACT
         const pathCompiled = fieldPathFormatter.formatPath(field.path);
@@ -42,7 +42,7 @@ describe('fieldPathFormatter tests', () => {
 
     it('with sub path replaces . with _ and lower characters', () => {
         // ARRANGE
-        const field = fieldObjectMother.get('address.Country');
+        const field = fieldObjectMother.get('address.Country', 'Country', 'string');
 
         // ACT
         const pathCompiled = fieldPathFormatter.formatPath(field.path);
@@ -53,7 +53,7 @@ describe('fieldPathFormatter tests', () => {
 
     it('escapes field path to avoid sql injections', () => {
         // ARRANGE
-        const field = fieldObjectMother.get("gender'--drop");
+        const field = fieldObjectMother.get("gender'--drop", 'inject', 'string');
 
         // ACT
         const pathCompiled = fieldPathFormatter.formatPath(field.path);

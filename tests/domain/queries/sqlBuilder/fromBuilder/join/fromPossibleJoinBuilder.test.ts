@@ -1,22 +1,24 @@
 import fromJoinBuilder from "../../../../../../src/domain/queries/sqlBuilder/fromBuilder/join/fromPossibleJoinBuilder";
 import environnementProvider from "../../../../../../src/infrastructure/environnementProvider";
 import FieldInfo from "../../../../../../src/models/fieldInfo";
+import Field from "../../../../../../src/models/request/field";
 import Filter from "../../../../../../src/models/request/filter";
 import selectorObjectMother from "../../../../../utils/objectMothers/models/selectorObjectMother"
 
 describe('fromPossibleJoinBuilder tests', () => {
-    const patientJoinSelector = selectorObjectMother.get('Patient', [], []);
-    const observationJoinSelector = selectorObjectMother.get('Observation', [], []);
+    const patientJoinSelector = selectorObjectMother.get('Patient', 'patient', [], []);
+    const observationJoinSelector = selectorObjectMother.get('Observation', 'observation', [], []);
 
 
 
     it('with no join selector, returns empty query', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Observation', [], []);
+        const selector = selectorObjectMother.get('Observation', 'patient', [], []);
         const filterMap = new Map<Filter, FieldInfo>();
+        const fieldMap = new Map<Field, FieldInfo>();
 
         // ACT
-        const query = fromJoinBuilder.build(selector, filterMap);
+        const query = fromJoinBuilder.build(selector, filterMap, fieldMap);
 
         // ASSERT
         expect(query).toEqual('');
@@ -31,11 +33,12 @@ describe('fromPossibleJoinBuilder tests', () => {
 
     it('add join statement from joinSelector to selector, join patient to observation', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Observation', [], [], patientJoinSelector);
+        const selector = selectorObjectMother.get('Observation', 'observation', [], [], patientJoinSelector);
         const filterMap = new Map<Filter, FieldInfo>();
+        const fieldMap = new Map<Field, FieldInfo>();
 
         // ACT
-        const query = fromJoinBuilder.build(selector, filterMap);
+        const query = fromJoinBuilder.build(selector, filterMap, fieldMap);
 
         // ASSERT
         const expectedQuery = `JOIN (${patientInnerJoinQuery} ) patient_table ON observation_table.resource->'subject'->>'id' = patient_table.id`;
@@ -44,11 +47,12 @@ describe('fromPossibleJoinBuilder tests', () => {
 
     it('add join statement from joinSelector to selector, join observation to patient', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', [], [], observationJoinSelector);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], [], observationJoinSelector);
         const filterMap = new Map<Filter, FieldInfo>();
+        const fieldMap = new Map<Field, FieldInfo>();
 
         // ACT
-        const query = fromJoinBuilder.build(selector, filterMap);
+        const query = fromJoinBuilder.build(selector, filterMap, fieldMap);
 
         // ASSERT
         const expectedQuery = `JOIN (${observationInnerJoinQuery} ) observation_table ON patient_table.id = observation_table.subject_id`;

@@ -3,23 +3,23 @@ import selectorObjectMother from "../../../../utils/objectMothers/models/selecto
 
 describe('selectJoinIdBuilder tests', () => {
     const testParams = [
-        { resource: 'Observation', joinResource: "Patient", selectId: "id" },
-        { resource: 'Patient', joinResource: "Observation", selectId: "resource->'subject'->>'id' AS subject_id" },
+        { resource: 'Observation', joinResource: "Patient", selectId: "resource->'subject'->>'id' AS subject_id" },
+        { resource: 'Patient', joinResource: "Observation", selectId: "id" },
     ]
 
     for (let testParam of testParams) {
         it(`returns ${testParam.selectId} for resource ${testParam.joinResource}`, () => {
-            const joinSelector = selectorObjectMother.get(testParam.joinResource, [], []);
-            const selector = selectorObjectMother.get(testParam.resource, [], [], joinSelector);
+            const joinSelector = selectorObjectMother.get(testParam.joinResource, 'label', [], []);
+            const selector = selectorObjectMother.get(testParam.resource, 'label', [], [], joinSelector);
 
-            expect(selectJoinIdBuilder.build(selector, joinSelector)).toEqual(testParam.selectId);
+            expect(selectJoinIdBuilder.build(selector)).toEqual(testParam.selectId);
         })
     }
 
     it(`escapes sql injection`, () => {
-        const joinSelector = selectorObjectMother.get("Patient'--drop", [], []);
-        const selector = selectorObjectMother.get("Observation'--drop", [], []);
+        const joinSelector = selectorObjectMother.get("Patient'--drop", 'patient', [], []);
+        const selector = selectorObjectMother.get("Observation'--drop", 'observation', [], []);
 
-        expect(selectJoinIdBuilder.build(selector, joinSelector)).toEqual("id");
+        expect(selectJoinIdBuilder.build(joinSelector)).toEqual("id");
     })
 })

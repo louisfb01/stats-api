@@ -4,7 +4,7 @@ import selectorObjectMother from "../../../../utils/objectMothers/models/selecto
 describe('fromResourceTableBuilder tests', () => {
     it('returns selector resource as table name with table name lowercase', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Observation', [], []);
+        const selector = selectorObjectMother.get('Observation', 'observation', [], []);
 
         // ACT
         const result = fromResourceTableBuilder.build(selector);
@@ -15,7 +15,7 @@ describe('fromResourceTableBuilder tests', () => {
 
     it('escapes resource to avoid sql injections', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get("Observation'--drop", [], []);
+        const selector = selectorObjectMother.get("Observation'--drop", 'observation', [], []);
 
         // ACT
         const result = fromResourceTableBuilder.build(selector);

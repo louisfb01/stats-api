@@ -9,7 +9,7 @@ describe('selectFieldBuilder tests', () => {
 
     it('gets json field as field with fields path . replaced with _ and subquery name', () => {
         // ARRANGE
-        const field = fieldObjectMother.get('address.country.name');
+        const field = fieldObjectMother.get('address.country.name', 'address_country_name', 'string');
 
         // ACT
         const result = selectFieldBuilder.build(field);
@@ -20,7 +20,7 @@ describe('selectFieldBuilder tests', () => {
 
     it('with array field, gets json field array formatted as field with fields path . replaced with _ and subquery name', () => {
         // ARRANGE
-        const field = fieldObjectMother.get('address.country.name');
+        const field = fieldObjectMother.get('address.country.name', 'address_country_name', 'string');
 
         resourceArrayFields.values = ['address.country'];
 
@@ -28,17 +28,17 @@ describe('selectFieldBuilder tests', () => {
         const result = selectFieldBuilder.build(field);
 
         // ASSERT
-        expect(result).toEqual("address_country->>'name' AS address_country_name");
+        expect(result).toEqual("jsonb_array_elements(resource->'address'->'country')->>'name' AS address_country_name");
     })
 
     it('gets age field from calculated fields', () => {
         // ARRANGE
-        const field = fieldObjectMother.get('age');
+        const field = fieldObjectMother.get('age', 'age', 'integer');
 
         // ACT
         const result = selectFieldBuilder.build(field);
 
         // ASSERT
-        expect(result).toEqual("extract(year from AGE(date(resource->>'birthDate'))) as age");
+        expect(result).toEqual("CASE WHEN resource->'deceased'->>'dateTime' IS NULL OR resource->'deceased'->>'dateTime' = 'NaT' THEN CASE WHEN length(resource->>'birthDate') < 7 THEN null WHEN length(resource->>'birthDate') = 7 THEN extract(year from AGE(date(resource->>'birthDate' || '-01'))) ELSE extract(year from AGE(date(resource->>'birthDate')))END ELSE CASE WHEN length(resource->>'birthDate') < 7 THEN null WHEN length(resource->>'birthDate') = 7 THEN extract(year from AGE(date(resource->'deceased'->>'dateTime'), date(resource->>'birthDate' || '-01'))) ELSE extract(year from AGE(date(resource->'deceased'->>'dateTime'), date(resource->>'birthDate'))) END END as age");
     })
 })

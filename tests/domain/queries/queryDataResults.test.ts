@@ -12,11 +12,11 @@ describe('queryDataResults tests', () => {
     const categoricalMeasureA = CategoricalMesure.mode;
     const categoricalMeasureB = CategoricalMesure.count;
 
-    const fieldA = fieldObjectMother.get('fieldA');
-    const fieldB = fieldObjectMother.get('fieldB');
+    const fieldA = fieldObjectMother.get('fieldA', 'label', 'string');
+    const fieldB = fieldObjectMother.get('fieldB', 'label', 'string');
 
-    const selectorA = selectorObjectMother.get('Patient', [], []);
-    const selectorB = selectorObjectMother.get('Observation', [], []);
+    const selectorA = selectorObjectMother.get('Patient', 'patient', [], []);
+    const selectorB = selectorObjectMother.get('Observation', 'observation', [], []);
 
     const resultA = { query: 'SELECT * FROM Patient', result: 'A' };
     const resultB = { query: 'SELECT * FROM Observation', result: 'B' };

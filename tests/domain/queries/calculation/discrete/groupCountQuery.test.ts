@@ -7,14 +7,16 @@ import fieldObjectMother from "../../../../utils/objectMothers/models/fieldObjec
 import filterObjectMother from "../../../../utils/objectMothers/models/filterObjectMother";
 import selectorObjectMother from "../../../../utils/objectMothers/models/selectorObjectMother";
 import resourceArrayFields from "../../../../../src/domain/resourceArrayFields";
+import Field from "../../../../../src/models/request/field";
 
 describe('groupCountQuery tests', () => {
-    const genderField = fieldObjectMother.get('gender');
+    const genderField = fieldObjectMother.get('gender', 'gender', 'string');
 
-    const femaleGenderFilter = filterObjectMother.get('gender', 'is', 'female');
+    const femaleGenderFilter = filterObjectMother.get('gender', 'is', 'female', 'string');
     const stringFieldInfo = fieldInfoObjectMother.get('string');
 
-    const filterMaps = getFieldsMap([femaleGenderFilter], [stringFieldInfo]);
+    const filterMaps = getFiltersMap([femaleGenderFilter], [stringFieldInfo]);
+    const fieldMaps = getFieldsMap([genderField], [stringFieldInfo]);
 
     beforeEach(() => {
         resourceArrayFields.values = []; // Simplify tests by not unwrapping json arrays.
@@ -22,10 +24,10 @@ describe('groupCountQuery tests', () => {
 
     it('With field and no filter, groups by field', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', [genderField], []);
+        const selector = selectorObjectMother.get('Patient', 'patient', [genderField], []);
 
         // ACT
-        const query = groupCountQuery.getQuery(selector, genderField, filterMaps);
+        const query = groupCountQuery.getQuery(selector, genderField, filterMaps, fieldMaps);
 
         // ASSERT
         expect(query).toEqual(sqlBuilderObjectMother.get()
@@ -36,7 +38,7 @@ describe('groupCountQuery tests', () => {
             .from()
             .resourceTable()
             .crossJoinForArrayFilters(genderField)
-            .possibleJoin()
+            .possibleJoin(fieldMaps)
             .groupBy()
             .field(genderField)
             .build(selector, filterMaps))
@@ -44,10 +46,10 @@ describe('groupCountQuery tests', () => {
 
     it('With field and filter, groups by field with WHERE filter', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', [genderField], [femaleGenderFilter]);
+        const selector = selectorObjectMother.get('Patient', 'patient', [genderField], [femaleGenderFilter]);
 
         // ACT
-        const query = groupCountQuery.getQuery(selector, genderField, filterMaps);
+        const query = groupCountQuery.getQuery(selector, genderField, filterMaps, fieldMaps);
 
         // ASSERT
         expect(query).toEqual(sqlBuilderObjectMother.get()
@@ -58,7 +60,7 @@ describe('groupCountQuery tests', () => {
             .from()
             .resourceTable()
             .crossJoinForArrayFilters(genderField)
-            .possibleJoin()
+            .possibleJoin(fieldMaps)
             .where()
             .fieldFilter()
             .groupBy()
@@ -66,7 +68,17 @@ describe('groupCountQuery tests', () => {
             .build(selector, filterMaps))
     })
 
-    function getFieldsMap(filters: Filter[], fieldInfo: FieldInfo[]) {
+    function getFieldsMap(fields: Field[], fieldInfo: FieldInfo[]) {
+        const fieldsMap = new Map<Field, FieldInfo>();
+
+        for (var fieldIndex = 0; fieldIndex < fields.length; fieldIndex++) {
+            fieldsMap.set(fields[fieldIndex], fieldInfo[fieldIndex]);
+        }
+
+        return fieldsMap;
+    }
+
+    function getFiltersMap(filters: Filter[], fieldInfo: FieldInfo[]) {
         const fieldsMap = new Map<Filter, FieldInfo>();
 
         for (var fieldIndex = 0; fieldIndex < filters.length; fieldIndex++) {

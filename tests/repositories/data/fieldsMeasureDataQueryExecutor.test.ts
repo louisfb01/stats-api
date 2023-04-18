@@ -16,17 +16,18 @@ import Measures from "../../../src/models/request/measures"
 import constants from "../../../src/constants"
 
 describe('fieldsMeasureDataQueryExecutor tests', () => {
-    const field = fieldObjectMother.get('field');
-    const selector = selectorObjectMother.get('Patient', [field], []);
+    const field = fieldObjectMother.get('field', 'label', 'type');
+    const selector = selectorObjectMother.get('Patient', 'patient', [field], []);
 
     const sqlQuery = "SELECT * FROM Patient";
     const result = { result: 'value' };
-    const queryAndResult = { query: sqlQuery, result }
+    const continuousResult = [{ sum: 'value'}];
 
     const testParameters = [
-        {fieldType: 'decimal', query: continuousQuery },
-        {fieldType: 'text', query: groupCountQuery },
+        {fieldType: 'float', query: continuousQuery, type: 'integer', result: continuousResult },
+        {fieldType: 'text', query: groupCountQuery, type: 'string', result: result },
     ]
+
     const measures:Measures = {
         "continuous":[ContinuousMesure.count, ContinuousMesure.mean, ContinuousMesure.stdev, ContinuousMesure.ci95],
         "categorical":[CategoricalMesure.count, CategoricalMesure.mode, CategoricalMesure.marginals]
@@ -39,7 +40,7 @@ describe('fieldsMeasureDataQueryExecutor tests', () => {
 
             const queryDataResults = queryDataResultsObjectMother.get();
 
-            const fieldInfo = fieldInfoObjectMother.get(tp.fieldType);
+            const fieldInfo = fieldInfoObjectMother.get(tp.type);
 
             const fieldsMap = getFieldsMap([field], [fieldInfo]);
             const filterMaps = new Map<Filter, FieldInfo>();
@@ -47,13 +48,13 @@ describe('fieldsMeasureDataQueryExecutor tests', () => {
 
             tp.query.getQuery = jest.fn();
             when(tp.query.getQuery as any)
-                .calledWith(selector, field, filterMaps)
+                .calledWith(selector, field, filterMaps, fieldsMap, measures)
                 .mockReturnValue(sqlQuery);
 
             aidboxProxy.executeQuery = jest.fn();
             when(aidboxProxy.executeQuery as any)
                 .calledWith(sqlQuery)
-                .mockReturnValue(result);
+                .mockReturnValue(tp.result);
 
             // ACT
             await fieldsMeasureDataQueryExecutor.exectuteQuery(queryDataResults, selector, field, measures, fieldsMap,
@@ -63,7 +64,7 @@ describe('fieldsMeasureDataQueryExecutor tests', () => {
             const gottenResult = isContinousMeasure ?
              queryDataResults.getResult(selector, field, measures.continuous[0])
             : queryDataResults.getResult(selector, field, measures.categorical[0]);
-            expect(gottenResult).toEqual(queryAndResult);
+            expect(gottenResult).toEqual({query: sqlQuery, result: tp.result});
         })
     })
 

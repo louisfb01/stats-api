@@ -8,7 +8,7 @@ describe('whereJsonArrayFormatterBuilder tests', () => {
 
     it('with with simple fieldPath elements, not array, field with resource returned', () => {
         // ARRANGE
-        const builder = whereJsonArrayFormatterBuilderObjectMother.get('gender');
+        const builder = whereJsonArrayFormatterBuilderObjectMother.get('gender', 'patient');
 
         // ACT
         const result = builder.build();
@@ -19,7 +19,7 @@ describe('whereJsonArrayFormatterBuilder tests', () => {
 
     it('with sub path, not array, field path from resource returned', () => {
         // ARRANGE
-        const builder = whereJsonArrayFormatterBuilderObjectMother.get('address.country');
+        const builder = whereJsonArrayFormatterBuilderObjectMother.get('address.country', 'patient');
 
         // ACT
         const result = builder.build();
@@ -30,7 +30,7 @@ describe('whereJsonArrayFormatterBuilder tests', () => {
 
     it('with two level sub path, not array, field path from resource returned', () => {
         // ARRANGE
-        const builder = whereJsonArrayFormatterBuilderObjectMother.get('address.country.name');
+        const builder = whereJsonArrayFormatterBuilderObjectMother.get('address.country.name', 'patient');
 
         // ACT
         const result = builder.build();
@@ -41,7 +41,7 @@ describe('whereJsonArrayFormatterBuilder tests', () => {
 
     it('with two level sub path, array at first field path, first is not in resource with other unrolled', () => {
         // ARRANGE
-        const builder = whereJsonArrayFormatterBuilderObjectMother.get('address.country.name');
+        const builder = whereJsonArrayFormatterBuilderObjectMother.get('address.country.name', 'patient');
         resourceArrayFields.values = ['address'];
 
         // ACT
@@ -53,7 +53,7 @@ describe('whereJsonArrayFormatterBuilder tests', () => {
 
     it('with two level sub path, array at second field path, first two path joined and rest unrolled', () => {
         // ARRANGE
-        const builder = whereJsonArrayFormatterBuilderObjectMother.get('address.country.name');
+        const builder = whereJsonArrayFormatterBuilderObjectMother.get('address.country.name', 'patient');
         resourceArrayFields.values = ['address.country'];
 
         // ACT
@@ -65,7 +65,7 @@ describe('whereJsonArrayFormatterBuilder tests', () => {
 
     it('when upper case characters, characters that are combined are lower cased', () => {
         // ARRANGE
-        const builder = whereJsonArrayFormatterBuilderObjectMother.get('Address.Country.Name');
+        const builder = whereJsonArrayFormatterBuilderObjectMother.get('Address.Country.Name', 'patient');
         resourceArrayFields.values = ['Address.Country'];
 
         // ACT
@@ -77,7 +77,7 @@ describe('whereJsonArrayFormatterBuilder tests', () => {
 
     it('with two level sub path, stop at array portion, field type is array at element 2, all elements are combined with _', () => {
         // ARRANGE
-        const builder = whereJsonArrayFormatterBuilderObjectMother.get('address.country.name');
+        const builder = whereJsonArrayFormatterBuilderObjectMother.get('address.country.name', 'patient');
         resourceArrayFields.values = ['address.country.name'];
 
         // ACT
@@ -89,7 +89,7 @@ describe('whereJsonArrayFormatterBuilder tests', () => {
 
     it('escapes field path to avoid sql injections', () => {
         // ARRANGE
-        const builder = whereJsonArrayFormatterBuilderObjectMother.get("gender'--drop");
+        const builder = whereJsonArrayFormatterBuilderObjectMother.get("gender'--drop", 'patient');
         resourceArrayFields.values = ['gender'];
 
         // ACT
@@ -101,7 +101,7 @@ describe('whereJsonArrayFormatterBuilder tests', () => {
 
     it('real case query with two arrays', () => {
         // ARRANGE
-        const builder = whereJsonArrayFormatterBuilderObjectMother.get('interpretation.coding.display');
+        const builder = whereJsonArrayFormatterBuilderObjectMother.get('interpretation.coding.display', 'observation');
         resourceArrayFields.values = ['interpretation', 'interpretation.coding'];
 
         // ACT

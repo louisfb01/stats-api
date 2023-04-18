@@ -10,7 +10,7 @@ describe('jsonTypePathCompiler tests', () => {
 
     it('it combines resource with field path', () => {
         // ARRANGE
-        const field = fieldObjectMother.get('gender');
+        const field = fieldObjectMother.get('gender', 'gender', 'string');
 
         // ACT
         const pathCompiled = jsonTypePathCompiler.getPathCompiled(field.path);
@@ -21,7 +21,7 @@ describe('jsonTypePathCompiler tests', () => {
 
     it('compiles level field path with appropriate sql connector', () => {
         // ARRANGE
-        const field = fieldObjectMother.get('address.country');
+        const field = fieldObjectMother.get('address.country', 'country', 'string');
 
         // ACT
         const pathCompiled = jsonTypePathCompiler.getPathCompiled(field.path);
@@ -32,7 +32,7 @@ describe('jsonTypePathCompiler tests', () => {
 
     it('compiles level field path two levels deep with appropriate sql connector', () => {
         // ARRANGE
-        const field = fieldObjectMother.get('address.country.name');
+        const field = fieldObjectMother.get('address.country.name', 'country', 'string');
 
         // ACT
         const pathCompiled = jsonTypePathCompiler.getPathCompiled(field.path);
@@ -43,7 +43,7 @@ describe('jsonTypePathCompiler tests', () => {
 
     it('escapes field path to avoid sql injections', () => {
         // ARRANGE
-        const field = fieldObjectMother.get("gender'--drop");
+        const field = fieldObjectMother.get("gender'--drop", 'inject', 'string');
 
         // ACT
         const pathCompiled = jsonTypePathCompiler.getPathCompiled(field.path);
@@ -54,7 +54,7 @@ describe('jsonTypePathCompiler tests', () => {
 
     it('when value is array, field is wrapped with jsonb_array_elements', () => {
         // ARRANGE
-        const field = fieldObjectMother.get('gender');
+        const field = fieldObjectMother.get('gender', 'gender', 'string');
 
         resourceArrayFields.values = ["gender"];
 
@@ -67,7 +67,7 @@ describe('jsonTypePathCompiler tests', () => {
 
     it('when multiple values are arrays, appropriate portions of path are wrapped with jsonb_array_elements', () => {
         // ARRANGE
-        const field = fieldObjectMother.get('address.country.name');
+        const field = fieldObjectMother.get('address.country.name', 'country', 'string');
 
         resourceArrayFields.values = ["address", "address.country.name"];
 

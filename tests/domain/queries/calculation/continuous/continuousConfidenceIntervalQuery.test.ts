@@ -13,13 +13,14 @@ import Measures from "../../../../../src/models/request/measures";
 
 
 describe('continuousConfidenceIntervalQuery tests', () => {
-    const ageField = fieldObjectMother.get('age');
-    const genderField = fieldObjectMother.get('gender');
+    const ageField = fieldObjectMother.get('age', 'age', 'integer');
+    const genderField = fieldObjectMother.get('gender', 'gender', 'string');
 
-    const femaleGenderFilter = filterObjectMother.get('gender', 'is', 'female');
+    const femaleGenderFilter = filterObjectMother.get('gender', 'is', 'female', 'string');
     const stringFieldInfo = fieldInfoObjectMother.get('string');
+    const integerFieldInfo = fieldInfoObjectMother.get('integer');
 
-    const filterMaps = getFieldsMap([femaleGenderFilter], [stringFieldInfo]);
+    const filterMaps = getFiltersMap([femaleGenderFilter], [stringFieldInfo]);
 
     const measures:Measures = {
         "continuous":[ContinuousMesure.ci95],
@@ -32,8 +33,8 @@ describe('continuousConfidenceIntervalQuery tests', () => {
 
     it('With field and no filter, groups by field', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', [genderField], []);
-        const fieldTypes = new Map<Field, FieldInfo>();
+        const selector = selectorObjectMother.get('Patient', 'patient', [genderField], []);
+        const fieldTypes = getFieldsMap([ageField], [integerFieldInfo])
 
         // ACT
         const query = continuousQuery.getQuery(selector, genderField, filterMaps, fieldTypes, measures);
@@ -41,34 +42,34 @@ describe('continuousConfidenceIntervalQuery tests', () => {
         // ASSERT
         expect(query).toEqual(sqlBuilderObjectMother.get()
             .select()
-            .fieldCiLow(genderField, selector)
+            .fieldCiLow(genderField, fieldTypes, selector)
             .comma()
-            .fieldCiHigh(genderField, selector)
+            .fieldCiHigh(genderField, fieldTypes, selector)
             .from()
             .resourceTable()
             .crossJoinForArrayFilters(genderField)
-            .possibleJoin()
+            .possibleJoin(fieldTypes)
             .build(selector, filterMaps))
     })
 
     it('With age computed field and no filter, groups by field with WHERE filter', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', [ageField], []);
-        const fieldTypes = new Map<Field, FieldInfo>();
+        const selector = selectorObjectMother.get('Patient', 'patient', [ageField], []);
+        const fieldTypes = getFieldsMap([ageField], [integerFieldInfo])
 
         // ACT
-        const query = continuousQuery.getQuery(selector, genderField, filterMaps, fieldTypes, measures);
+        const query = continuousQuery.getQuery(selector, ageField, filterMaps, fieldTypes, measures);
 
         // ASSERT
         expect(query).toEqual(sqlBuilderObjectMother.get()
             .select()
-            .fieldCiLow(ageField, selector)
+            .fieldCiLow(ageField, fieldTypes, selector)
             .comma()
-            .fieldCiHigh(ageField, selector)
+            .fieldCiHigh(ageField, fieldTypes, selector)
             .from()
             .resourceTable()
             .crossJoinForArrayFilters(ageField)
-            .possibleJoin()
+            .possibleJoin(fieldTypes)
             .where()
             .fieldFilter(ageField)
             .build(selector, filterMaps))
@@ -76,8 +77,8 @@ describe('continuousConfidenceIntervalQuery tests', () => {
 
     it('With field and filter, groups by field with WHERE filter', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', [genderField], [femaleGenderFilter]);
-        const fieldTypes = new Map<Field, FieldInfo>();
+        const selector = selectorObjectMother.get('Patient', 'patient', [genderField], [femaleGenderFilter]);
+        const fieldTypes = getFieldsMap([genderField], [stringFieldInfo])
 
         // ACT
         const query = continuousQuery.getQuery(selector, genderField, filterMaps, fieldTypes, measures);
@@ -85,23 +86,33 @@ describe('continuousConfidenceIntervalQuery tests', () => {
         // ASSERT
         expect(query).toEqual(sqlBuilderObjectMother.get()
             .select()
-            .fieldCiLow(genderField, selector)
+            .fieldCiLow(genderField, fieldTypes, selector)
             .comma()
-            .fieldCiHigh(genderField, selector)
+            .fieldCiHigh(genderField, fieldTypes, selector)
             .from()
             .resourceTable()
             .crossJoinForArrayFilters(genderField)
-            .possibleJoin()
+            .possibleJoin(fieldTypes)
             .where()
             .fieldFilter()
             .build(selector, filterMaps))
     })
 
-    function getFieldsMap(filters: Filter[], fieldInfo: FieldInfo[]) {
+    function getFiltersMap(filters: Filter[], fieldInfo: FieldInfo[]) {
         const fieldsMap = new Map<Filter, FieldInfo>();
 
         for (var fieldIndex = 0; fieldIndex < filters.length; fieldIndex++) {
             fieldsMap.set(filters[fieldIndex], fieldInfo[fieldIndex]);
+        }
+
+        return fieldsMap;
+    }
+
+    function getFieldsMap(fields: Field[], fieldInfo: FieldInfo[]) {
+        const fieldsMap = new Map<Field, FieldInfo>();
+
+        for (var fieldIndex = 0; fieldIndex < fields.length; fieldIndex++) {
+            fieldsMap.set(fields[fieldIndex], fieldInfo[fieldIndex]);
         }
 
         return fieldsMap;

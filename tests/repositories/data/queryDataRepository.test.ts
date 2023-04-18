@@ -18,8 +18,8 @@ describe('summarizeDataQueryExecutor tests', () => {
 
     it('Processes each requests for selectors', async () => {
         // ARRANGE
-        const selectorA = selectorObjectMother.get('Patient', [], []);
-        const selectorB = selectorObjectMother.get('Observation', [], []);
+        const selectorA = selectorObjectMother.get('Patient', 'patient', [], []);
+        const selectorB = selectorObjectMother.get('Observation', 'observation', [], []);
 
         const request = summarizeRequestBodyObjectMother.get([selectorA, selectorB], { measures });
 

@@ -6,8 +6,8 @@ import fieldObjectMother from "../../../utils/objectMothers/models/fieldObjectMo
 import selectorObjectMother from "../../../utils/objectMothers/models/selectorObjectMother";
 
 describe('continuousConfidenceIntervalCalculator tests', () => {
-    const field = fieldObjectMother.get('gender');
-    const selector = selectorObjectMother.get('Patient', [field], []);
+    const field = fieldObjectMother.get('gender', 'gender', 'string');
+    const selector = selectorObjectMother.get('Patient', 'patient', [field], []);
     const measure = CategoricalMesure.count;
 
     it('with mean and sum, both results returned for mean', () => {

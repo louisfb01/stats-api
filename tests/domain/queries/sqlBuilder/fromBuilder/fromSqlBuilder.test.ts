@@ -6,17 +6,18 @@ import fieldObjectMother from "../../../../utils/objectMothers/models/fieldObjec
 import filterObjectMother from "../../../../utils/objectMothers/models/filterObjectMother";
 import selectorObjectMother from "../../../../utils/objectMothers/models/selectorObjectMother";
 import resourceArrayFields from "../../../../../src/domain/resourceArrayFields";
+import Field from "../../../../../src/models/request/field";
 
 describe('fromSqlBuilder tests', () => {
     const stringFieldInfo = fieldInfoObjectMother.get('string');
 
-    const genderField = fieldObjectMother.get('gender');
-    const addressCityField = fieldObjectMother.get('address.city');
+    const genderField = fieldObjectMother.get('gender', 'gender', 'string');
+    const addressCityField = fieldObjectMother.get('address.city', 'address_city', 'string');
 
-    const genderFilter = filterObjectMother.get('gender', 'is', 'female');
-    const cityFilter = filterObjectMother.get('address.city', 'is', 'Quebec');
+    const genderFilter = filterObjectMother.get('gender', 'is', 'female', 'string');
+    const cityFilter = filterObjectMother.get('address.city', 'is', 'Quebec', 'string');
 
-    const patientSelector = selectorObjectMother.get('Patient', [genderField, addressCityField], [genderFilter]);
+    const patientSelector = selectorObjectMother.get('Patient', 'patient', [genderField, addressCityField], [genderFilter]);
 
     it('initialy has FROM command', () => {
         // ARRANGE
@@ -61,7 +62,7 @@ describe('fromSqlBuilder tests', () => {
 
     it('can add crossJoin to FROM', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', [genderField, addressCityField], [genderFilter, cityFilter])
+        const selector = selectorObjectMother.get('Patient', 'patient', [genderField, addressCityField], [genderFilter, cityFilter])
         const filterTypes = getFiltersMap([genderFilter, cityFilter], [stringFieldInfo, stringFieldInfo]);
         const fromSqlBuilder = fromSqlBuilderObjectMother.get();
 
@@ -79,7 +80,7 @@ describe('fromSqlBuilder tests', () => {
 
     it('can add crossJoin with field to FROM', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', [genderField, addressCityField], [genderFilter])
+        const selector = selectorObjectMother.get('Patient', 'patient', [genderField, addressCityField], [genderFilter])
         const filterTypes = getFiltersMap([genderFilter, cityFilter], [stringFieldInfo, stringFieldInfo]);
         const fromSqlBuilder = fromSqlBuilderObjectMother.get();
 
@@ -97,19 +98,20 @@ describe('fromSqlBuilder tests', () => {
 
     it('can add subquery to FROM', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', [genderField], [])
+        const selector = selectorObjectMother.get('Patient', 'patient', [genderField], [])
         const filterTypes = getFiltersMap([genderFilter, cityFilter], [stringFieldInfo, stringFieldInfo]);
+        const fieldTypes = getFieldMap([genderField], [stringFieldInfo])
         const fromSqlBuilder = fromSqlBuilderObjectMother.get();
 
         resourceArrayFields.values = ["address.city"];
 
         // ACT
         const sqlQuery = fromSqlBuilder
-            .subquery(genderField, 'SQ')
+            .subquery(fieldTypes)
             .build(selector, filterTypes);
 
         // ASSERT
-        expect(sqlQuery).toEqual("FROM (SELECT resource->>'gender' AS gender FROM Patient) AS SQ");
+        expect(sqlQuery).toEqual("FROM (SELECT (resource->>'gender')::string AS gender FROM Patient patient_table ) as subQuery");
     })
 
     it('can add GROUP BY statement builder', () => {
@@ -129,16 +131,17 @@ describe('fromSqlBuilder tests', () => {
 
     it('can add possibleJoin statement builder', () => {
         // ARRANGE
-        const joinSelector = selectorObjectMother.get('Patient', [], []);
+        const joinSelector = selectorObjectMother.get('Patient', 'patient', [], []);
         const innerJoinQuery = "SELECT id FROM Patient patient_table";
-        const selector = selectorObjectMother.get('Observation', [], [], joinSelector);
+        const selector = selectorObjectMother.get('Observation', 'observation', [], [], joinSelector);
 
         const filterTypes = new Map<Filter, FieldInfo>();
         const fromSqlBuilder = fromSqlBuilderObjectMother.get();
+        const fieldTypes = getFieldMap([],[])
 
         // ACT
         const sqlQuery = fromSqlBuilder
-            .possibleJoin()
+            .possibleJoin(fieldTypes)
             .build(selector, filterTypes);
 
         // ASSERT
@@ -152,6 +155,16 @@ describe('fromSqlBuilder tests', () => {
 
         for (var fieldIndex = 0; fieldIndex < filters.length; fieldIndex++) {
             fieldsMap.set(filters[fieldIndex], fieldInfo[fieldIndex]);
+        }
+
+        return fieldsMap;
+    }
+
+    function getFieldMap(fields: Field[], fieldInfo: FieldInfo[]) {
+        const fieldsMap = new Map<Field, FieldInfo>();
+
+        for (var fieldIndex = 0; fieldIndex < fields.length; fieldIndex++) {
+            fieldsMap.set(fields[fieldIndex], fieldInfo[fieldIndex]);
         }
 
         return fieldsMap;

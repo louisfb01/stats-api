@@ -7,13 +7,13 @@ import filterObjectMother from "../../../../utils/objectMothers/models/filterObj
 import selectorObjectMother from "../../../../utils/objectMothers/models/selectorObjectMother";
 
 describe('whereSqlBuilder tests', () => {
-    const genderField = fieldObjectMother.get('gender');
-    const addressCityField = fieldObjectMother.get('address.city');
+    const genderField = fieldObjectMother.get('gender', 'gender', 'string');
+    const addressCityField = fieldObjectMother.get('address.city', 'city', 'string');
 
-    const femaleGenderFilter = filterObjectMother.get('gender', 'is', 'female');
+    const femaleGenderFilter = filterObjectMother.get('gender', 'is', 'female', 'string');
     const stringFieldInfo = fieldInfoObjectMother.get('string');
 
-    const patientSelector = selectorObjectMother.get('Patient', [genderField, addressCityField], [femaleGenderFilter]);
+    const patientSelector = selectorObjectMother.get('Patient', 'patient', [genderField, addressCityField], [femaleGenderFilter]);
 
     it('initialy has WHERE command', () => {
         // ARRANGE
@@ -38,14 +38,14 @@ describe('whereSqlBuilder tests', () => {
             .build(patientSelector, filterTypes);
 
         // ASSERT
-        expect(sqlQuery).toEqual("WHERE resource->>'gender' = 'female'");
+        expect(sqlQuery).toEqual("WHERE (resource->>'gender')::string = 'female'");
     })
 
     it('can add fieldFilter with possible computed field WHERE', () => {
         // ARRANGE
         const filterTypes = getFieldsMap([femaleGenderFilter], [stringFieldInfo]);
         const whereSqlBuilder = whereSqlBuilderObjectMother.get();
-        const ageField = fieldObjectMother.get('age');
+        const ageField = fieldObjectMother.get('age', 'age', 'integer');
 
         // ACT
         const sqlQuery = whereSqlBuilder
@@ -53,7 +53,7 @@ describe('whereSqlBuilder tests', () => {
             .build(patientSelector, filterTypes);
 
         // ASSERT
-        expect(sqlQuery).toEqual("WHERE resource->>'gender' = 'female' AND resource->>'birthDate' != 'null'");
+        expect(sqlQuery).toEqual("WHERE (resource->>'gender')::string = 'female' AND resource->>'birthDate' != 'null'");
     })
 
     it('can add subqueryFilter to WHERE', () => {
@@ -83,7 +83,7 @@ describe('whereSqlBuilder tests', () => {
             .build(patientSelector, filterTypes);
 
         // ASSERT
-        expect(sqlQuery).toEqual("WHERE resource->>'gender' = 'female' GROUP BY resource->>'gender'");
+        expect(sqlQuery).toEqual("WHERE (resource->>'gender')::string = 'female' GROUP BY resource->>'gender'");
     })
 
     function getFieldsMap(fields: Filter[], fieldInfo: FieldInfo[]) {

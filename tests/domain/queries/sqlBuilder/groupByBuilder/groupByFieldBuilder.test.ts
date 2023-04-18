@@ -9,7 +9,7 @@ describe('groupByFieldBuilder tests', () => {
 
     it('Gets json field path formatted', () => {
         // ARRANGE
-        const field = fieldObjectMother.get('address.country.name');
+        const field = fieldObjectMother.get('address.country.name', 'country', 'string');
 
         // ACT
         const result = groupByFieldBuilder.build(field);
@@ -20,7 +20,7 @@ describe('groupByFieldBuilder tests', () => {
 
     it('Gets json array field path formatted', () => {
         // ARRANGE
-        const field = fieldObjectMother.get('address.country.name');
+        const field = fieldObjectMother.get('address.country.name', 'country', 'string');
 
         resourceArrayFields.values = ['address.country'];
 
@@ -29,6 +29,6 @@ describe('groupByFieldBuilder tests', () => {
         const result = groupByFieldBuilder.build(field);
 
         // ASSERT
-        expect(result).toEqual("address_country->>'name'");
+        expect(result).toEqual("jsonb_array_elements(resource->'address'->'country')->>'name'");
     })
 })

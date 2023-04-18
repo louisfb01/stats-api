@@ -1,4 +1,5 @@
 import { when } from "jest-when";
+import continuousBreakdownCalculator from "../../../src/domain/calculation/breakdown/continuousBreakdownCalculator";
 import timeBreakdownCalculator from "../../../src/domain/calculation/breakdown/timeBreakdownCalculator";
 import fieldReponseProcessor from "../../../src/domain/calculation/fieldReponseProcessor";
 import summarizeReponseProcessor from "../../../src/domain/calculation/summarizeReponseProcessor";
@@ -13,8 +14,8 @@ import measuresObjectMother from "../../utils/objectMothers/models/request/measu
 import selectorObjectMother from "../../utils/objectMothers/models/selectorObjectMother";
 
 describe('summarizeReponseProcessor tests', () => {
-    const fieldA = fieldObjectMother.get('fieldA');
-    const fieldB = fieldObjectMother.get('fieldB');
+    const fieldA = fieldObjectMother.get('fieldA', 'fieldA', 'string');
+    const fieldB = fieldObjectMother.get('fieldB', 'fieldB', 'string');
 
     const fieldAReponse = fieldResponseObjectMother.get('fieldA');
     const fieldBReponse = fieldResponseObjectMother.get('fieldB');
@@ -24,7 +25,7 @@ describe('summarizeReponseProcessor tests', () => {
 
     it('when aidbox response is error, indicates error', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patiend', [], []);
+        const selector = selectorObjectMother.get('Patiend', 'patient', [], []);
 
         const queryDataResults = queryDataResultsObjectMother.get();
         queryDataResults.addSelectorResult(selector, { query: 'SELECT * FROM Patient', result: new Error('error') });
@@ -38,7 +39,7 @@ describe('summarizeReponseProcessor tests', () => {
 
     it('gets aidbox total and queryUri for summarize response', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', [], []);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], []);
 
         const queryDataResults = queryDataResultsObjectMother.get();
         queryDataResults.addSelectorResult(selector, { query: 'SELECT * FROM Patient', result: { count: 999 } });
@@ -53,7 +54,7 @@ describe('summarizeReponseProcessor tests', () => {
 
     it('gets field responses from selector fields', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patiend', [fieldA, fieldB], []);
+        const selector = selectorObjectMother.get('Patiend', 'patient', [fieldA, fieldB], []);
 
         const queryDataResults = queryDataResultsObjectMother.get();
         queryDataResults.addSelectorResult(selector, { query: 'SELECT * FROM Patient', result: { count: 999 } });
@@ -77,22 +78,22 @@ describe('summarizeReponseProcessor tests', () => {
 
     it('gets aidbox breakdown and queryUri for summarize response', () => {
         // ARRANGE
-        const breakdown = breakdownObjectMother.get('Patient', 'gender', 60);
-        const selector = selectorObjectMother.get('Patient', [], [], undefined, breakdown);
+        const breakdown = breakdownObjectMother.get('Patient', 'gender', 60, 'string');
+        const selector = selectorObjectMother.get('Patient', 'patient', [], [], undefined);
 
         const queryDataResults = queryDataResultsObjectMother.get();
         queryDataResults.addSelectorResult(selector, { query: 'SELECT * FROM Patient', result: { count: 999 } });
 
         const breakdownResult = breakdownResponseObjectMother.get();
-        timeBreakdownCalculator.calculate = jest.fn();
-        when(timeBreakdownCalculator.calculate as any)
-            .calledWith(selector, queryDataResults)
+        continuousBreakdownCalculator.calculate = jest.fn();
+        when(continuousBreakdownCalculator.calculate as any)
+            .calledWith(selector, queryDataResults, breakdown)
             .mockReturnValue(breakdownResult);
 
         // ACT
-        const summarizeReponse = summarizeReponseProcessor.getSummarizeReponse(selector, measures, queryDataResults, fieldsMap);
+        const summarizeReponse = summarizeReponseProcessor.getBreakdownReponse(selector, queryDataResults, breakdown);
 
         // ASSERT
-        expect(summarizeReponse.breakdown).toBe(breakdownResult);
+        expect(summarizeReponse).toBe(breakdownResult);
     })
 })

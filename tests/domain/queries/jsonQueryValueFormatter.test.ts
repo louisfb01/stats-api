@@ -6,7 +6,7 @@ describe('jsonQueryValueFormatter tests', () => {
     it("With string field type, value is padded with ' ", () => {
         // ARRANGE
         const fieldInfo = fieldInfoObjectMother.get('string');
-        const filter = filterObjectMother.get("value", 'is', 'value');
+        const filter = filterObjectMother.get("value", 'is', 'value', 'string');
 
         // ACT
         const value = jsonQueryValueFormatter.formatValueForSql(filter, fieldInfo);
@@ -18,19 +18,19 @@ describe('jsonQueryValueFormatter tests', () => {
     it("With boolean field type, value is padded with ' ", () => {
         // ARRANGE
         const fieldInfo = fieldInfoObjectMother.get('boolean');
-        const filter = filterObjectMother.get("value", 'is', 'value');
+        const filter = filterObjectMother.get("value", 'is', 'value', 'boolean');
 
         // ACT
         const value = jsonQueryValueFormatter.formatValueForSql(filter, fieldInfo);
 
         // ASSERT
-        expect(value).toEqual("'value'");
+        expect(value).toEqual("value");
     })
 
     it("With number field type, value is padded with ' ", () => {
         // ARRANGE
         const fieldInfo = fieldInfoObjectMother.get('number');
-        const filter = filterObjectMother.get("value", 'is', '45');
+        const filter = filterObjectMother.get("value", 'is', '45', 'integer');
 
         // ACT
         const value = jsonQueryValueFormatter.formatValueForSql(filter, fieldInfo);
@@ -45,7 +45,7 @@ describe('jsonQueryValueFormatter tests', () => {
         it(`With null value, ${eq} operator, value is as is`, () => {
             // ARRANGE
             const fieldInfo = fieldInfoObjectMother.get('string');
-            const filter = filterObjectMother.get("value", 'is', 'null');
+            const filter = filterObjectMother.get("value", 'is', 'null', 'string');
     
             // ACT
             const value = jsonQueryValueFormatter.formatValueForSql(filter, fieldInfo);
@@ -57,7 +57,7 @@ describe('jsonQueryValueFormatter tests', () => {
         it(`With NULL value, ${eq} operator, value is as is`, () => {
             // ARRANGE
             const fieldInfo = fieldInfoObjectMother.get('string');
-            const filter = filterObjectMother.get("value", 'is', 'NULL');
+            const filter = filterObjectMother.get("value", 'is', 'NULL', 'string');
     
             // ACT
             const value = jsonQueryValueFormatter.formatValueForSql(filter, fieldInfo);
@@ -71,7 +71,7 @@ describe('jsonQueryValueFormatter tests', () => {
     it("With null value, not a equal operator, value is padded with '", () => {
         // ARRANGE
         const fieldInfo = fieldInfoObjectMother.get('string');
-        const filter = filterObjectMother.get("value", 'after', 'null');
+        const filter = filterObjectMother.get("value", 'after', 'null', 'string');
 
         // ACT
         const value = jsonQueryValueFormatter.formatValueForSql(filter, fieldInfo);
@@ -83,7 +83,7 @@ describe('jsonQueryValueFormatter tests', () => {
     it("With NULL value, not a equal operator, value is padded with '", () => {
         // ARRANGE
         const fieldInfo = fieldInfoObjectMother.get('string');
-        const filter = filterObjectMother.get("value", 'after', 'NULL');
+        const filter = filterObjectMother.get("value", 'after', 'NULL', 'string');
 
         // ACT
         const value = jsonQueryValueFormatter.formatValueForSql(filter, fieldInfo);

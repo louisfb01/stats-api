@@ -19,8 +19,8 @@ describe('aidboxReponseProcessor tests', () => {
         // ARRANGE
         const queryDataResults = queryDataResultsObjectMother.get();
 
-        const selectorA = selectorObjectMother.get('Patient', [], []);
-        const selectorB = selectorObjectMother.get('Observation', [], []);
+        const selectorA = selectorObjectMother.get('Patient', 'patient', [], []);
+        const selectorB = selectorObjectMother.get('Observation', 'observation', [], []);
 
         const summarizeRequest = summarizeRequestBodyObjectMother.get([selectorA, selectorB], options);
 

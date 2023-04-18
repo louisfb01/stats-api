@@ -9,7 +9,7 @@ describe('getFieldTypeSelectQuery tests', () => {
 
     it('uses field path for query', () => {
         // ARRANGE
-        const field = fieldObjectMother.get('gender');
+        const field = fieldObjectMother.get('gender', 'gender', 'string');
 
         // ACT
         const query = getFieldTypeSelectQuery.getQuery(field);
@@ -20,7 +20,7 @@ describe('getFieldTypeSelectQuery tests', () => {
 
     it('compiles level field path with appropriate sql connector', () => {
         // ARRANGE
-        const field = fieldObjectMother.get('address.country')
+        const field = fieldObjectMother.get('address.country', 'address_country', 'string')
 
         // ACT
         const query = getFieldTypeSelectQuery.getQuery(field);
@@ -31,7 +31,7 @@ describe('getFieldTypeSelectQuery tests', () => {
 
     it('compiles level field path two levels deep with appropriate sql connector', () => {
         // ARRANGE
-        const field = fieldObjectMother.get('address.country.name')
+        const field = fieldObjectMother.get('address.country.name', 'address_country_name', 'string')
 
         // ACT
         const query = getFieldTypeSelectQuery.getQuery(field);
@@ -42,7 +42,7 @@ describe('getFieldTypeSelectQuery tests', () => {
 
     it('escapes field path to avoid sql injections', () => {
         // ARRANGE
-        const field = fieldObjectMother.get("gender'--drop");
+        const field = fieldObjectMother.get("gender'--drop", 'gender', 'string');
 
         // ACT
         const query = getFieldTypeSelectQuery.getQuery(field);

@@ -10,8 +10,8 @@ describe('whereSubqueryFilterBuilder tests', () => {
 
     it('with no field for filter, an error is thrown.', () => {
         // ARRANGE
-        const filter = filterObjectMother.get('name', 'is', 'John');
-        const selector = selectorObjectMother.get('Patient', [], [filter]);
+        const filter = filterObjectMother.get('name', 'is', 'John', 'string');
+        const selector = selectorObjectMother.get('Patient', 'patient', [], [filter]);
 
         const filterFields = getFieldsMap([], []);
 
@@ -21,8 +21,8 @@ describe('whereSubqueryFilterBuilder tests', () => {
 
     it('with one filter, string field, filter with subquery name is set', () => {
         // ARRANGE
-        const filter = filterObjectMother.get('name', 'is', 'John');
-        const selector = selectorObjectMother.get('Patient', [], [filter]);
+        const filter = filterObjectMother.get('name', 'is', 'John', 'string');
+        const selector = selectorObjectMother.get('Patient', 'patient', [], [filter]);
 
         const filterFields = getFieldsMap([filter], [stringFieldInfo]);
 
@@ -35,8 +35,8 @@ describe('whereSubqueryFilterBuilder tests', () => {
 
     it('with one filter, lower filter operator, < sql operand is used', () => {
         // ARRANGE
-        const filter = filterObjectMother.get('name', 'lessThan', 'John');
-        const selector = selectorObjectMother.get('Patient', [], [filter]);
+        const filter = filterObjectMother.get('name', 'lessThan', 'John', 'string');
+        const selector = selectorObjectMother.get('Patient', 'patient', [], [filter]);
 
         const filterFields = getFieldsMap([filter], [stringFieldInfo]);
 
@@ -49,8 +49,8 @@ describe('whereSubqueryFilterBuilder tests', () => {
 
     it('with one filter, filter path is composed, string field, filter path is normalized', () => {
         // ARRANGE
-        const filter = filterObjectMother.get('address.city', 'is', 'Mexico');
-        const selector = selectorObjectMother.get('Patient', [], [filter]);
+        const filter = filterObjectMother.get('address.city', 'is', 'Mexico', 'string');
+        const selector = selectorObjectMother.get('Patient', 'patient', [], [filter]);
 
         const filterFields = getFieldsMap([filter], [stringFieldInfo]);
 
@@ -63,9 +63,9 @@ describe('whereSubqueryFilterBuilder tests', () => {
 
     it('with two filters, filters are concatenated with AND', () => {
         // ARRANGE
-        const filterA = filterObjectMother.get('name', 'is', 'John');
-        const filterB = filterObjectMother.get('gender', 'is', 'male');
-        const selector = selectorObjectMother.get('Patient', [], [filterA, filterB]);
+        const filterA = filterObjectMother.get('name', 'is', 'John', 'string');
+        const filterB = filterObjectMother.get('gender', 'is', 'male', 'string');
+        const selector = selectorObjectMother.get('Patient', 'patient', [], [filterA, filterB]);
 
         const filterFields = getFieldsMap([filterA, filterB], [stringFieldInfo, stringFieldInfo]);
 

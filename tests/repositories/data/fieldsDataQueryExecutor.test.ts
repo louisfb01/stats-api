@@ -14,11 +14,11 @@ import Filter from "../../../src/models/request/filter";
 describe('fieldsDataQueryExecutor tests', () => {
     const allOptionsMeasures = measuresObjectMother.getAllOptionMeasures();
 
-    const field = fieldObjectMother.get('field');
+    const field = fieldObjectMother.get('field', 'label', 'type');
 
     const numberFieldType = aidboxFieldResponseObjectMother.get('number');
     const decimalFieldType = aidboxFieldResponseObjectMother.get('decimal');
-    const textFieldType = aidboxFieldResponseObjectMother.get('text');
+    const textFieldType = aidboxFieldResponseObjectMother.get('string');
 
     const filterMaps = new Map<Filter, FieldInfo>();
 
@@ -30,7 +30,7 @@ describe('fieldsDataQueryExecutor tests', () => {
     it('integer field, all measures chosen, all continuous measures calculated', async () => {
         // ARRANGE
         const fieldsMap = getFieldsMap([field], [numberFieldType]);
-        const selector = selectorObjectMother.get('Patient', [field], []);
+        const selector = selectorObjectMother.get('Patient', 'patient', [field], []);
 
         const queryDataResults = queryDataResultsObjectMother.get();
 
@@ -38,16 +38,13 @@ describe('fieldsDataQueryExecutor tests', () => {
         await fieldsDataQueryExecutor.executeQueries(queryDataResults, selector, allOptionsMeasures, field, fieldsMap, filterMaps);
 
         // ASSERT
-        expect(fieldsMeasureDataQueryExecutor.exectuteQuery).toHaveBeenCalledWith(queryDataResults, selector, field, ContinuousMesure.count, fieldsMap, filterMaps);
-        expect(fieldsMeasureDataQueryExecutor.exectuteQuery).toHaveBeenCalledWith(queryDataResults, selector, field, ContinuousMesure.mean, fieldsMap, filterMaps);
-        expect(fieldsMeasureDataQueryExecutor.exectuteQuery).toHaveBeenCalledWith(queryDataResults, selector, field, ContinuousMesure.stdev, fieldsMap, filterMaps);
-        expect(fieldsMeasureDataQueryExecutor.exectuteQuery).toHaveBeenCalledWith(queryDataResults, selector, field, ContinuousMesure.ci95, fieldsMap, filterMaps);
+        expect(fieldsMeasureDataQueryExecutor.exectuteQuery).toHaveBeenCalledWith(queryDataResults, selector, field, allOptionsMeasures, fieldsMap, filterMaps);
     })
 
     it('decimal field, all measures chosen, all continuous measures calculated', async () => {
         // ARRANGE
         const fieldsMap = getFieldsMap([field], [decimalFieldType]);
-        const selector = selectorObjectMother.get('Patient', [field], []);
+        const selector = selectorObjectMother.get('Patient', 'patient', [field], []);
 
         const queryDataResults = queryDataResultsObjectMother.get();
 
@@ -55,16 +52,13 @@ describe('fieldsDataQueryExecutor tests', () => {
         await fieldsDataQueryExecutor.executeQueries(queryDataResults, selector, allOptionsMeasures, field, fieldsMap, filterMaps);
 
         // ASSERT
-        expect(fieldsMeasureDataQueryExecutor.exectuteQuery).toHaveBeenCalledWith(queryDataResults, selector, field, ContinuousMesure.count, fieldsMap, filterMaps);
-        expect(fieldsMeasureDataQueryExecutor.exectuteQuery).toHaveBeenCalledWith(queryDataResults, selector, field, ContinuousMesure.mean, fieldsMap, filterMaps);
-        expect(fieldsMeasureDataQueryExecutor.exectuteQuery).toHaveBeenCalledWith(queryDataResults, selector, field, ContinuousMesure.stdev, fieldsMap, filterMaps);
-        expect(fieldsMeasureDataQueryExecutor.exectuteQuery).toHaveBeenCalledWith(queryDataResults, selector, field, ContinuousMesure.ci95, fieldsMap, filterMaps);
+        expect(fieldsMeasureDataQueryExecutor.exectuteQuery).toHaveBeenCalledWith(queryDataResults, selector, field, allOptionsMeasures, fieldsMap, filterMaps);
     })
 
     it('integer field, two continuous measures chosen, both measures calculated', async () => {
         // ARRANGE
         const fieldsMap = getFieldsMap([field], [numberFieldType]);
-        const selector = selectorObjectMother.get('Patient', [field], []);
+        const selector = selectorObjectMother.get('Patient', 'patient', [field], []);
         const measures = measuresObjectMother.get([], [ContinuousMesure.mean, ContinuousMesure.ci95])
 
         const queryDataResults = queryDataResultsObjectMother.get();
@@ -73,14 +67,13 @@ describe('fieldsDataQueryExecutor tests', () => {
         await fieldsDataQueryExecutor.executeQueries(queryDataResults, selector, measures, field, fieldsMap, filterMaps);
 
         // ASSERT
-        expect(fieldsMeasureDataQueryExecutor.exectuteQuery).toHaveBeenCalledWith(queryDataResults, selector, field, ContinuousMesure.mean, fieldsMap, filterMaps);
-        expect(fieldsMeasureDataQueryExecutor.exectuteQuery).toHaveBeenCalledWith(queryDataResults, selector, field, ContinuousMesure.ci95, fieldsMap, filterMaps);
+        expect(fieldsMeasureDataQueryExecutor.exectuteQuery).toHaveBeenCalledWith(queryDataResults, selector, field, measures, fieldsMap, filterMaps);
     })
 
     it('text field, all measures chosen, all categorical measures calculated', async () => {
         // ARRANGE
         const fieldsMap = getFieldsMap([field], [textFieldType]);
-        const selector = selectorObjectMother.get('Patient', [field], []);
+        const selector = selectorObjectMother.get('Patient', 'patient', [field], []);
 
         const queryDataResults = queryDataResultsObjectMother.get();
 
@@ -88,15 +81,13 @@ describe('fieldsDataQueryExecutor tests', () => {
         await fieldsDataQueryExecutor.executeQueries(queryDataResults, selector, allOptionsMeasures, field, fieldsMap, filterMaps);
 
         // ASSERT
-        expect(fieldsMeasureDataQueryExecutor.exectuteQuery).toHaveBeenCalledWith(queryDataResults, selector, field, CategoricalMesure.count, fieldsMap, filterMaps);
-        expect(fieldsMeasureDataQueryExecutor.exectuteQuery).toHaveBeenCalledWith(queryDataResults, selector, field, CategoricalMesure.mode, fieldsMap, filterMaps);
-        expect(fieldsMeasureDataQueryExecutor.exectuteQuery).toHaveBeenCalledWith(queryDataResults, selector, field, CategoricalMesure.marginals, fieldsMap, filterMaps);
+        expect(fieldsMeasureDataQueryExecutor.exectuteQuery).toHaveBeenCalledWith(queryDataResults, selector, field, allOptionsMeasures, fieldsMap, filterMaps);
     })
 
     it('text field, two measures chosen, both categorical measures calculated', async () => {
         // ARRANGE
         const fieldsMap = getFieldsMap([field], [textFieldType]);
-        const selector = selectorObjectMother.get('Patient', [field], []);
+        const selector = selectorObjectMother.get('Patient', 'patient', [field], []);
         const measures = measuresObjectMother.get([CategoricalMesure.count, CategoricalMesure.marginals])
 
         const queryDataResults = queryDataResultsObjectMother.get();
@@ -105,8 +96,7 @@ describe('fieldsDataQueryExecutor tests', () => {
         await fieldsDataQueryExecutor.executeQueries(queryDataResults, selector, measures, field, fieldsMap, filterMaps);
 
         // ASSERT
-        expect(fieldsMeasureDataQueryExecutor.exectuteQuery).toHaveBeenCalledWith(queryDataResults, selector, field, CategoricalMesure.count, fieldsMap, filterMaps);
-        expect(fieldsMeasureDataQueryExecutor.exectuteQuery).toHaveBeenCalledWith(queryDataResults, selector, field, CategoricalMesure.marginals, fieldsMap, filterMaps);
+        expect(fieldsMeasureDataQueryExecutor.exectuteQuery).toHaveBeenCalledWith(queryDataResults, selector, field, measures, fieldsMap, filterMaps);
     })
 
     function getFieldsMap(fields: Field[], aidboxFields: FieldInfo[]) {

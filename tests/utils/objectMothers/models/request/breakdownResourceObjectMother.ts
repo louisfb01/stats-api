@@ -1,9 +1,10 @@
 import BreakdownResource from "../../../../../src/models/request/breakdownResource"
 
-function get(type: string, field: string): BreakdownResource {
+function get(type: string, field: string, fieldType: string): BreakdownResource {
     return {
         type,
-        field
+        field,
+        fieldType
     }
 }
 

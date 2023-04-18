@@ -5,8 +5,8 @@ import fieldObjectMother from "../../../utils/objectMothers/models/fieldObjectMo
 import selectorObjectMother from "../../../utils/objectMothers/models/selectorObjectMother";
 
 describe('continuousTotalCountCalculator tests', () => {
-    const field = fieldObjectMother.get('gender');
-    const selector = selectorObjectMother.get('Patient', [field], []);
+    const field = fieldObjectMother.get('gender', 'gender', 'string');
+    const selector = selectorObjectMother.get('Patient', 'patient', [field], []);
     const measure = CategoricalMesure.count;
 
     it('with sum in query, sum is returned.', () => {

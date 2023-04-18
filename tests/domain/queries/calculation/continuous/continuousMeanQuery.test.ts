@@ -12,10 +12,10 @@ import ContinuousMesure from "../../../../../src/models/continuousMeasure";
 import Measures from "../../../../../src/models/request/measures";
 
 describe('continuousMeanQuery tests', () => {
-    const ageField = fieldObjectMother.get('age');
-    const genderField = fieldObjectMother.get('gender');
+    const ageField = fieldObjectMother.get('age', 'age', 'integer');
+    const genderField = fieldObjectMother.get('gender', 'gender', 'string');
 
-    const femaleGenderFilter = filterObjectMother.get('gender', 'is', 'female');
+    const femaleGenderFilter = filterObjectMother.get('gender', 'is', 'female', 'string');
     const stringFieldInfo = fieldInfoObjectMother.get('string');
 
     const filterMaps = getFieldsMap([femaleGenderFilter], [stringFieldInfo]);
@@ -32,7 +32,7 @@ describe('continuousMeanQuery tests', () => {
 
     it('With field and no filter, groups by field', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', [genderField], []);
+        const selector = selectorObjectMother.get('Patient', 'patient', [genderField], []);
         const fieldTypes = new Map<Field, FieldInfo>();
 
         // ACT
@@ -47,17 +47,17 @@ describe('continuousMeanQuery tests', () => {
             .from()
             .resourceTable()
             .crossJoinForArrayFilters(genderField)
-            .possibleJoin()
+            .possibleJoin(fieldTypes)
             .build(selector, filterMaps))
     })
 
     it('With age computed field and no filter, groups by field with WHERE filter', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', [ageField], []);
+        const selector = selectorObjectMother.get('Patient', 'patient', [ageField], []);
         const fieldTypes = new Map<Field, FieldInfo>();
 
         // ACT
-        const query = continuousQuery.getQuery(selector, genderField, filterMaps, fieldTypes, measures);
+        const query = continuousQuery.getQuery(selector, ageField, filterMaps, fieldTypes, measures);
 
         // ASSERT
         expect(query).toEqual(sqlBuilderObjectMother.get()
@@ -68,7 +68,7 @@ describe('continuousMeanQuery tests', () => {
             .from()
             .resourceTable()
             .crossJoinForArrayFilters(ageField)
-            .possibleJoin()
+            .possibleJoin(fieldTypes)
             .where()
             .fieldFilter(ageField)
             .build(selector, filterMaps))
@@ -76,7 +76,7 @@ describe('continuousMeanQuery tests', () => {
 
     it('With field and filter, groups by field with WHERE filter', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', [genderField], [femaleGenderFilter]);
+        const selector = selectorObjectMother.get('Patient', 'patient', [genderField], [femaleGenderFilter]);
         const fieldTypes = new Map<Field, FieldInfo>();
 
         // ACT
@@ -91,7 +91,7 @@ describe('continuousMeanQuery tests', () => {
             .from()
             .resourceTable()
             .crossJoinForArrayFilters(genderField)
-            .possibleJoin()
+            .possibleJoin(fieldTypes)
             .where()
             .fieldFilter()
             .build(selector, filterMaps))

@@ -5,10 +5,10 @@ import fieldObjectMother from "../../../utils/objectMothers/models/fieldObjectMo
 import selectorObjectMother from "../../../utils/objectMothers/models/selectorObjectMother";
 
 describe('discreteModeCalculator tests', () => {
-    const field = fieldObjectMother.get('gender');
-    const complexPathField = fieldObjectMother.get('path.complex');
-    const fieldWithCaps = fieldObjectMother.get('path.Complex');
-    const selector = selectorObjectMother.get('Patient', [field], []);
+    const field = fieldObjectMother.get('gender', 'gender', 'string');
+    const complexPathField = fieldObjectMother.get('path.complex', 'label', 'type');
+    const fieldWithCaps = fieldObjectMother.get('path.Complex', 'label', 'type');
+    const selector = selectorObjectMother.get('Patient', 'patient', [field], []);
     const measure = CategoricalMesure.mode;
 
 

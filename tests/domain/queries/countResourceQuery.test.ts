@@ -6,23 +6,26 @@ import fieldInfoObjectMother from "../../utils/objectMothers/models/fieldInfoObj
 import filterObjectMother from "../../utils/objectMothers/models/filterObjectMother";
 import selectorObjectMother from "../../utils/objectMothers/models/selectorObjectMother";
 import resourceArrayFields from "../../../src/domain/resourceArrayFields";
+import Field from "../../../src/models/request/field";
 
 describe('countResourceQuery tests', () => {
 
-    const femaleGenderFilter = filterObjectMother.get('gender', 'is', 'female');
+    const femaleGenderFilter = filterObjectMother.get('gender', 'is', 'female', 'string');
     const stringFieldInfo = fieldInfoObjectMother.get('string');
 
-    const joinSelector = selectorObjectMother.get('Patient', [], []);
+    const joinSelector = selectorObjectMother.get('Patient', 'patient', [], []);
 
     const filterMaps = getFieldsMap([femaleGenderFilter], [stringFieldInfo]);
+    
+    const fieldMap = new Map<Field, FieldInfo>();
 
 
     it('gets query with resource from', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', [], [], joinSelector);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], [], joinSelector);
 
         // ACT
-        const query = countResourceQuery.getQuery(selector, filterMaps);
+        const query = countResourceQuery.getQuery(selector, filterMaps, fieldMap);
 
         // ASSERT
         expect(query).toEqual(sqlBuilderObjectMother.get()
@@ -30,16 +33,16 @@ describe('countResourceQuery tests', () => {
             .countAll()
             .from()
             .resourceTable()
-            .possibleJoin()
+            .possibleJoin(fieldMap)
             .build(selector, filterMaps))
     })
 
     it('gets query with filters applied', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', [], [femaleGenderFilter], joinSelector);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], [femaleGenderFilter], joinSelector);
 
         // ACT
-        const query = countResourceQuery.getQuery(selector, filterMaps);
+        const query = countResourceQuery.getQuery(selector, filterMaps, fieldMap);
 
         // ASSERT
         expect(query).toEqual(sqlBuilderObjectMother.get()
@@ -47,7 +50,7 @@ describe('countResourceQuery tests', () => {
             .countAll()
             .from()
             .resourceTable()
-            .possibleJoin()
+            .possibleJoin(fieldMap)
             .where()
             .fieldFilter()
             .build(selector, filterMaps))
@@ -55,10 +58,10 @@ describe('countResourceQuery tests', () => {
 
     it('escapes resource to avoid sql injections', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get("Patient'--drop", [], []);
+        const selector = selectorObjectMother.get("Patient'--drop", 'patient', [], []);
 
         // ACT
-        const query = countResourceQuery.getQuery(selector, filterMaps);
+        const query = countResourceQuery.getQuery(selector, filterMaps, fieldMap);
 
         // ASSERT
         expect(query).toEqual("SELECT count(*) FROM Patient patient_table "); // Space is added by possible join which has no impact
@@ -66,12 +69,12 @@ describe('countResourceQuery tests', () => {
 
     it('gets query with cross join and filters applied when one field is array type', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', [], [femaleGenderFilter], joinSelector);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], [femaleGenderFilter], joinSelector);
 
         resourceArrayFields.values = ['gender'];
 
         // ACT
-        const query = countResourceQuery.getQuery(selector, filterMaps);
+        const query = countResourceQuery.getQuery(selector, filterMaps, fieldMap);
 
         // ASSERT
         expect(query).toEqual(sqlBuilderObjectMother.get()
@@ -80,7 +83,7 @@ describe('countResourceQuery tests', () => {
             .from()
             .resourceTable()
             .crossJoinForArrayFilters()
-            .possibleJoin()
+            .possibleJoin(fieldMap)
             .where()
             .fieldFilter()
             .build(selector, filterMaps))

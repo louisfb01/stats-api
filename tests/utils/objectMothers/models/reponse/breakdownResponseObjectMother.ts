@@ -3,7 +3,9 @@ import BreakdownResponse from "../../../../../src/models/response/breakdownRespo
 function get(): BreakdownResponse {
     return {
         query: 'SELECT * FROM PATIENT',
-        result: []
+        result: [],
+        field: 'Field',
+        fieldType: ''
     }
 }
 

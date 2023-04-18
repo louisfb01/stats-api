@@ -16,8 +16,8 @@ describe('fieldReponseBuilder tests', () => {
     describe('build', () => {
         it('sets field name and calculation results', () => {
             // ARRANGE
-            const field = fieldObjectMother.get('field');
-            const selector = selectorObjectMother.get('Patient', [field], []);
+            const field = fieldObjectMother.get('field', 'field', 'string');
+            const selector = selectorObjectMother.get('Patient', 'patient', [field], []);
             const fieldReponseBuilder = new FieldReponseBuilder(field, [countMetricCalculator, meanMetricCalculator]);
             const fieldTypes = new Map<Field, FieldInfo>();
 
@@ -35,8 +35,8 @@ describe('fieldReponseBuilder tests', () => {
 
         it('sets the used query to get the measures.', () => {
             // ARRANGE
-            const field = fieldObjectMother.get('field');
-            const selector = selectorObjectMother.get('Patient', [field], []);
+            const field = fieldObjectMother.get('field', 'field', 'string');
+            const selector = selectorObjectMother.get('Patient', 'patient', [field], []);
             const fieldReponseBuilder = new FieldReponseBuilder(field, [countMetricCalculator, meanMetricCalculator]);
             const fieldTypes = new Map<Field, FieldInfo>();
 

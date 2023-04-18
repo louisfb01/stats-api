@@ -5,10 +5,10 @@ import filterObjectMother from "../../../../../utils/objectMothers/models/filter
 import selectorObjectMother from "../../../../../utils/objectMothers/models/selectorObjectMother";
 
 describe('CrossJoinForLevelBuilder tests', () => {
-    const maleGenderFilter = filterObjectMother.get('gender', 'is', 'male');
-    const femaleGenderFilter = filterObjectMother.get('gender', 'is', 'female');
-    const cityFilter = filterObjectMother.get('address.city', 'is', 'Quebec');
-    const countryFilter = filterObjectMother.get('address.country', 'is', 'Quebec');
+    const maleGenderFilter = filterObjectMother.get('gender', 'is', 'male', 'string');
+    const femaleGenderFilter = filterObjectMother.get('gender', 'is', 'female', 'string');
+    const cityFilter = filterObjectMother.get('address.city', 'is', 'Quebec', 'string');
+    const countryFilter = filterObjectMother.get('address.country', 'is', 'Quebec', 'string');
 
     beforeEach(() => {
         resourceArrayFields.values = [];
@@ -16,7 +16,7 @@ describe('CrossJoinForLevelBuilder tests', () => {
 
     it('with no filter, has no remaining path to build', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', [], []);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], []);
         const builder = crossJoinForLevelBuilderObjectMother.get(selector);
 
         // ACT
@@ -28,7 +28,7 @@ describe('CrossJoinForLevelBuilder tests', () => {
 
     it('with filter, no array in filter, has no remaining path to build', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', [], [cityFilter]);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], [cityFilter]);
         const builder = crossJoinForLevelBuilderObjectMother.get(selector);
 
         // ACT
@@ -40,7 +40,7 @@ describe('CrossJoinForLevelBuilder tests', () => {
 
     it('with two filters, one array in each, builds in one level', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', [], [maleGenderFilter, cityFilter]);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], [maleGenderFilter, cityFilter]);
         const builder = crossJoinForLevelBuilderObjectMother.get(selector);
 
         resourceArrayFields.values = ['gender', 'address'];
@@ -55,8 +55,8 @@ describe('CrossJoinForLevelBuilder tests', () => {
 
     it('with one filter and field, one array in each, builds in one level', () => {
         // ARRANGE
-        const genderField = fieldObjectMother.get('gender')
-        const selector = selectorObjectMother.get('Patient', [], [cityFilter]);
+        const genderField = fieldObjectMother.get('gender', 'gender', 'string')
+        const selector = selectorObjectMother.get('Patient', 'patient', [], [cityFilter]);
         const builder = crossJoinForLevelBuilderObjectMother.get(selector, genderField);
 
         resourceArrayFields.values = ['gender', 'address'];
@@ -71,7 +71,7 @@ describe('CrossJoinForLevelBuilder tests', () => {
 
     it('with two filters, one array in each, array of each yield same field, field is only included once', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', [], [cityFilter, countryFilter]);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], [cityFilter, countryFilter]);
         const builder = crossJoinForLevelBuilderObjectMother.get(selector);
 
         resourceArrayFields.values = ['gender', 'address'];
@@ -86,8 +86,8 @@ describe('CrossJoinForLevelBuilder tests', () => {
 
     it('with two filters and field, one array in each, array of each yield same field, field is only included once', () => {
         // ARRANGE
-        const cityField = fieldObjectMother.get('address.city')
-        const selector = selectorObjectMother.get('Patient', [], [cityFilter, countryFilter]);
+        const cityField = fieldObjectMother.get('address.city', 'city', 'string')
+        const selector = selectorObjectMother.get('Patient', 'patient', [], [cityFilter, countryFilter]);
         const builder = crossJoinForLevelBuilderObjectMother.get(selector, cityField);
 
         resourceArrayFields.values = ['gender', 'address'];
@@ -102,7 +102,7 @@ describe('CrossJoinForLevelBuilder tests', () => {
 
     it('with two filters, array in second, builds in one level with only filter that has array', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', [], [maleGenderFilter, cityFilter]);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], [maleGenderFilter, cityFilter]);
         const builder = crossJoinForLevelBuilderObjectMother.get(selector);
 
         resourceArrayFields.values = ['address'];
@@ -118,7 +118,7 @@ describe('CrossJoinForLevelBuilder tests', () => {
 
     it('with two filters, same field in filter, filter is only once in cross join', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', [], [maleGenderFilter, femaleGenderFilter]);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], [maleGenderFilter, femaleGenderFilter]);
         const builder = crossJoinForLevelBuilderObjectMother.get(selector);
 
         resourceArrayFields.values = ['gender'];
@@ -134,7 +134,7 @@ describe('CrossJoinForLevelBuilder tests', () => {
 
     it('with two arrays in filter, builds in two level', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', [], [maleGenderFilter, cityFilter]);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], [maleGenderFilter, cityFilter]);
         const builder = crossJoinForLevelBuilderObjectMother.get(selector);
 
         resourceArrayFields.values = ['address', 'address.city'];

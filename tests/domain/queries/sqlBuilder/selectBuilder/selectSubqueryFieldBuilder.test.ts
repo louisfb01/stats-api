@@ -4,7 +4,7 @@ import fieldObjectMother from "../../../../utils/objectMothers/models/fieldObjec
 describe('selectSubqueryFieldBuilder tests', () => {
     it('get fields path . replaced with _ and subquery name', () => {
         // ARRANGE
-        const field = fieldObjectMother.get('address.country.name');
+        const field = fieldObjectMother.get('address.country.name', 'country', 'string');
 
         // ACT
         const result = selectSubqueryFieldBuilder.build(field, 'SQ');

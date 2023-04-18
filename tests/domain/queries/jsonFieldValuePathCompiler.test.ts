@@ -9,7 +9,7 @@ describe('jsonValuePathCompiler tests', () => {
 
     it('it combines resource with field path joins by json value getter', () => {
         // ARRANGE
-        const field = fieldObjectMother.get('gender');
+        const field = fieldObjectMother.get('gender', 'gender', 'string');
 
         // ACT
         const pathCompiled = jsonValuePathCompiler.getPathCompiled(field.path);
@@ -20,7 +20,7 @@ describe('jsonValuePathCompiler tests', () => {
 
     it('compiles level field path with appropriate sql connector', () => {
         // ARRANGE
-        const field = fieldObjectMother.get('address.country');
+        const field = fieldObjectMother.get('address.country', 'country', 'string');
 
         // ACT
         const pathCompiled = jsonValuePathCompiler.getPathCompiled(field.path);
@@ -31,7 +31,7 @@ describe('jsonValuePathCompiler tests', () => {
 
     it('compiles level field path two levels deep with appropriate sql connector', () => {
         // ARRANGE
-        const field = fieldObjectMother.get('address.country.name');
+        const field = fieldObjectMother.get('address.country.name', 'country_name', 'string');
 
         // ACT
         const pathCompiled = jsonValuePathCompiler.getPathCompiled(field.path);
@@ -42,7 +42,7 @@ describe('jsonValuePathCompiler tests', () => {
 
     it('escapes field path to avoid sql injections', () => {
         // ARRANGE
-        const field = fieldObjectMother.get("gender'--drop");
+        const field = fieldObjectMother.get("gender'--drop", 'inject', 'string');
 
         // ACT
         const pathCompiled = jsonValuePathCompiler.getPathCompiled(field.path);
@@ -53,7 +53,7 @@ describe('jsonValuePathCompiler tests', () => {
 
     it('when value is array, field is wrapped with jsonb_array_elements and is not explicitly json untyped', () => {
         // ARRANGE
-        const field = fieldObjectMother.get('gender');
+        const field = fieldObjectMother.get('gender', 'gender', 'string');
 
         resourceArrayFields.values = ["gender"];
 
@@ -66,7 +66,7 @@ describe('jsonValuePathCompiler tests', () => {
 
     it('when multiple values are arrays, appropriate portions of path are wrapped with jsonb_array_elements', () => {
         // ARRANGE
-        const field = fieldObjectMother.get('address.country.name');
+        const field = fieldObjectMother.get('address.country.name', 'country_name', 'string');
 
         resourceArrayFields.values = ["address", "address.country"];
 
@@ -80,7 +80,7 @@ describe('jsonValuePathCompiler tests', () => {
 
     it('when multiple values are arrays, last path element is array, json value is returned instead of typed', () => {
         // ARRANGE
-        const field = fieldObjectMother.get('address.country.name');
+        const field = fieldObjectMother.get('address.country.name', 'country_name', 'string');
 
         resourceArrayFields.values = ["address", "address.country.name"];
 

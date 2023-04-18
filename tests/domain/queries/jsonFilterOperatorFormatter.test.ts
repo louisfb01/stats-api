@@ -34,7 +34,7 @@ describe('jsonFilterOperatorFormatter tests', () => {
     standardTestParams.forEach(tp => {
         it(`With ${tp.operator} the resulting sql operand is ${tp.sqlOperand}`, () => {
             // ARRANGE
-            const filter = filterObjectMother.get('field', tp.operator, 'value');
+            const filter = filterObjectMother.get('field', tp.operator, 'value', 'integer');
 
             // ACT
             const resultSqlOperand = jsonFilterOperatorFormatter.formatOperatorForSql(filter);
@@ -45,7 +45,7 @@ describe('jsonFilterOperatorFormatter tests', () => {
 
         it(`With ${tp.operator.toLowerCase()} the resulting sql operand is ${tp.sqlOperand}`, () => {
             // ARRANGE
-            const filter = filterObjectMother.get('field', tp.operator.toLowerCase(), 'value');
+            const filter = filterObjectMother.get('field', tp.operator.toLowerCase(), 'value', 'integer');
 
             // ACT
             const resultSqlOperand = jsonFilterOperatorFormatter.formatOperatorForSql(filter);
@@ -56,7 +56,7 @@ describe('jsonFilterOperatorFormatter tests', () => {
 
         it(`With ${tp.operator.toUpperCase()} the resulting sql operand is ${tp.sqlOperand}`, () => {
             // ARRANGE
-            const filter = filterObjectMother.get('field', tp.operator.toUpperCase(), 'value');
+            const filter = filterObjectMother.get('field', tp.operator.toUpperCase(), 'value', 'integer');
 
             // ACT
             const resultSqlOperand = jsonFilterOperatorFormatter.formatOperatorForSql(filter);
@@ -75,7 +75,7 @@ describe('jsonFilterOperatorFormatter tests', () => {
     nullAffectedTestParams.forEach(tp => {
         it(`With ${tp.operator} and null filter the resulting sql operand is ${tp.sqlOperand}`, () => {
             // ARRANGE
-            const filter = filterObjectMother.get('field', tp.operator, 'null');
+            const filter = filterObjectMother.get('field', tp.operator, 'null', 'integer');
 
             // ACT
             const resultSqlOperand = jsonFilterOperatorFormatter.formatOperatorForSql(filter);
@@ -86,7 +86,7 @@ describe('jsonFilterOperatorFormatter tests', () => {
 
         it(`With ${tp.operator.toLowerCase()} and null  the resulting sql operand is ${tp.sqlOperand}`, () => {
             // ARRANGE
-            const filter = filterObjectMother.get('field', tp.operator.toLowerCase(), 'null');
+            const filter = filterObjectMother.get('field', tp.operator.toLowerCase(), 'null', 'integer');
 
             // ACT
             const resultSqlOperand = jsonFilterOperatorFormatter.formatOperatorForSql(filter);
@@ -97,7 +97,7 @@ describe('jsonFilterOperatorFormatter tests', () => {
 
         it(`With ${tp.operator.toUpperCase()} and null  the resulting sql operand is ${tp.sqlOperand}`, () => {
             // ARRANGE
-            const filter = filterObjectMother.get('field', tp.operator.toUpperCase(), 'null');
+            const filter = filterObjectMother.get('field', tp.operator.toUpperCase(), 'null', 'integer');
 
             // ACT
             const resultSqlOperand = jsonFilterOperatorFormatter.formatOperatorForSql(filter);
@@ -108,7 +108,7 @@ describe('jsonFilterOperatorFormatter tests', () => {
 
         it(`With ${tp.operator} and NULL filter the resulting sql operand is ${tp.sqlOperand}`, () => {
             // ARRANGE
-            const filter = filterObjectMother.get('field', tp.operator, 'NULL');
+            const filter = filterObjectMother.get('field', tp.operator, 'NULL', 'integer');
 
             // ACT
             const resultSqlOperand = jsonFilterOperatorFormatter.formatOperatorForSql(filter);

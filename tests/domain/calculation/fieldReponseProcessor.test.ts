@@ -17,9 +17,9 @@ describe('fieldReponseProcessor tests', () => {
 
     it('gets field from aidbox data and metric calculators', () => {
         // ARRANGE
-        const field = fieldObjectMother.get('field');
+        const field = fieldObjectMother.get('field', 'field', 'string');
         const fieldsMap = getFieldsMap([field], [tokenField]);
-        const selector = selectorObjectMother.get('Patient', [field], []);
+        const selector = selectorObjectMother.get('Patient', 'patient', [field], []);
 
         const measures = measuresObjectMother.get();
         const queryDataResults = queryDataResultsObjectMother.get();

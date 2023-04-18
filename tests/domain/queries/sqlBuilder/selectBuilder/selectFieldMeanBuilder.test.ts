@@ -12,9 +12,9 @@ describe('selectFieldMeanBuilder tests', () => {
 
     it('gets sum of json field as field with fields path . replaced with _ and subquery name', () => {
         // ARRANGE
-        const field = fieldObjectMother.get('address.country.name');
+        const field = fieldObjectMother.get('address.country.name', 'country', 'name');
         const fieldTypes = new Map<Field, FieldInfo>();
-        const patientSelector = selectorObjectMother.get('Patient', [field], []);
+        const patientSelector = selectorObjectMother.get('Patient', 'patient', [field], []);
 
         // ACT
         const result = selectFieldMeanBuilder.build(field, fieldTypes, patientSelector);
@@ -25,9 +25,9 @@ describe('selectFieldMeanBuilder tests', () => {
 
     it('with array field, gets json field array formatted as field with fields path . replaced with _ and subquery name', () => {
         // ARRANGE
-        const field = fieldObjectMother.get('address.country.name');
+        const field = fieldObjectMother.get('address.country.name', 'country', 'string');
         const fieldTypes = new Map<Field, FieldInfo>();
-        const patientSelector = selectorObjectMother.get('Patient', [field], []);
+        const patientSelector = selectorObjectMother.get('Patient', 'patient', [field], []);
 
         resourceArrayFields.values = ['address.country'];
 
@@ -35,14 +35,14 @@ describe('selectFieldMeanBuilder tests', () => {
         const result = selectFieldMeanBuilder.build(field, fieldTypes, patientSelector);
 
         // ASSERT
-        expect(result).toEqual("AVG(address_country->>'name') AS mean");
+        expect(result).toEqual("AVG(jsonb_array_elements(resource->'address'->'country')->>'name') AS mean");
     })
 
     it('gets age field from calculated fields', () => {
         // ARRANGE
-        const field = fieldObjectMother.get('age');
+        const field = fieldObjectMother.get('age', 'age', 'integer');
         const fieldTypes = new Map<Field, FieldInfo>();
-        const patientSelector = selectorObjectMother.get('Patient', [field], []);
+        const patientSelector = selectorObjectMother.get('Patient', 'patient', [field], []);
 
         // ACT
         const result = selectFieldMeanBuilder.build(field, fieldTypes, patientSelector);

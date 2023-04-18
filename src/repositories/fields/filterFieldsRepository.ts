@@ -17,18 +17,21 @@ computedFields.set('dateTime', 'DATE');
 
 function setFilterFieldTypes(filters: Filter[], response: any[], fieldsAndFieldReponses: Map<Filter, FieldInfo | Error>) {
     for (let filter of filters) {
-        const fieldPathNormalized = fieldPathFormatter.formatPath(filter.path);
-        let fieldType = response.map(r => r[fieldPathNormalized]).filter(v => v != null)[0] as string;
-        const computedField = computedFields.get(fieldType)
-        if (computedField)
-            fieldType = computedField
+        if(response instanceof Error)
+            fieldsAndFieldReponses.set(filter,response)
+        else{
+            const fieldPathNormalized = fieldPathFormatter.formatPath(filter.path);
+            let fieldType = response.map(r => r[fieldPathNormalized]).filter(v => v != null)[0] as string;
+            const computedField = computedFields.get(fieldType)
+            if (computedField)
+                fieldType = computedField
 
-        const fieldInfo: FieldInfo = {
-            name: filter.path,
-            type: String(fieldType)
-        };
-
-        fieldsAndFieldReponses.set(filter, fieldInfo);
+            const fieldInfo: FieldInfo = {
+                name: filter.path,
+                type: String(fieldType)
+            };
+            fieldsAndFieldReponses.set(filter, fieldInfo);
+        }
     }
 }
 
@@ -52,6 +55,9 @@ async function getSelectorFieldInfos(selector: Selector, filterType: Map<Filter,
             else {
                 const query = getFilterFieldTypesQuery.getQuery(selector);
                 const selectorFilterTypes = await aidboxProxy.executeQuery(query);
+                if(selectorFilterTypes instanceof Error){
+                    
+                }
                 setFilterFieldTypes(selector.filters, selectorFilterTypes, filterType);
             }
         }

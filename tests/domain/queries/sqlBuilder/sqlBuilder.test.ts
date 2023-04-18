@@ -7,13 +7,13 @@ import filterObjectMother from "../../../utils/objectMothers/models/filterObject
 import selectorObjectMother from "../../../utils/objectMothers/models/selectorObjectMother";
 
 describe('sqlBuilder tests', () => {
-    const genderField = fieldObjectMother.get('gender');
-    const addressCityField = fieldObjectMother.get('address.city');
+    const genderField = fieldObjectMother.get('gender', 'gender' , 'string');
+    const addressCityField = fieldObjectMother.get('address.city', 'city', 'string');
 
-    const femaleGenderFilter = filterObjectMother.get('gender', 'is', 'female');
+    const femaleGenderFilter = filterObjectMother.get('gender', 'is', 'female', 'string');
     const stringFieldInfo = fieldInfoObjectMother.get('string');
 
-    const patientSelector = selectorObjectMother.get('Patient', [genderField, addressCityField], [femaleGenderFilter]);
+    const patientSelector = selectorObjectMother.get('Patient', 'patient', [genderField, addressCityField], [femaleGenderFilter]);
 
     describe('build tests', () => {
         it('with count * select and resource from, corresponding sql is built', () => {
@@ -49,7 +49,7 @@ describe('sqlBuilder tests', () => {
             const sql = builder.build(patientSelector, filterTypes);
 
             // ASSERT
-            expect(sql).toEqual("SELECT count(*) FROM Patient patient_table WHERE resource->>'gender' = 'female'")
+            expect(sql).toEqual("SELECT count(*) FROM Patient patient_table WHERE (resource->>'gender')::string = 'female'")
         })
     })
 

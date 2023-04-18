@@ -3,13 +3,13 @@ import Field from "../../../../src/models/request/field";
 import Filter from "../../../../src/models/request/filter";
 import Selector from "../../../../src/models/request/selector";
 
-function get(resource: string, fields: Field[], filters: Filter[], joins?: Selector, breakdown?: Breakdown): Selector {
+function get(resource: string, label:string, fields: Field[], filters: Filter[], joins?: Selector): Selector {
     return {
         resource,
+        label,
         fields,
         filters,
-        joins,
-        breakdown
+        joins
     }
 }
 

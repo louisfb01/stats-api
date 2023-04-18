@@ -8,13 +8,13 @@ import breakdownObjectMother from "../../../../utils/objectMothers/models/reques
 import selectorObjectMother from "../../../../utils/objectMothers/models/selectorObjectMother";
 
 describe('SelectSqlBuilder tests', () => {
-    const genderField = fieldObjectMother.get('gender');
-    const addressCityField = fieldObjectMother.get('address.city');
+    const genderField = fieldObjectMother.get('gender', 'gender', 'string');
+    const addressCityField = fieldObjectMother.get('address.city', 'city', 'string');
 
-    const femaleGenderFilter = filterObjectMother.get('gender', 'is', 'female');
+    const femaleGenderFilter = filterObjectMother.get('gender', 'is', 'female', 'string');
 
-    const patientSelector = selectorObjectMother.get('Patient', [genderField, addressCityField], [femaleGenderFilter]);
-    const observationSelector = selectorObjectMother.get('Observation', [genderField, addressCityField], [femaleGenderFilter]);
+    const patientSelector = selectorObjectMother.get('Patient', 'patient', [genderField, addressCityField], [femaleGenderFilter]);
+    const observationSelector = selectorObjectMother.get('Observation', 'observation', [genderField, addressCityField], [femaleGenderFilter]);
 
     it('initialy has SELECT command', () => {
         // ARRANGE
@@ -49,7 +49,7 @@ describe('SelectSqlBuilder tests', () => {
 
         // ACT
         const sqlQuery = selectSqlBuilder
-            .joinId(observationSelector)
+            .joinId()
             .build(patientSelector, filterTypes);
 
         // ASSERT
@@ -60,9 +60,9 @@ describe('SelectSqlBuilder tests', () => {
         // ARRANGE
         const filterTypes = new Map<Filter, FieldInfo>();
         const selectSqlBuilder = selectBuilderObjectMother.get();
-        const field = fieldObjectMother.get('gender');
+        const field = fieldObjectMother.get('gender', 'gender', 'string');
 
-        const selector = selectorObjectMother.get('Patient', [field], []);
+        const selector = selectorObjectMother.get('Patient', 'patient', [field], []);
 
         // ACT
         const sqlQuery = selectSqlBuilder
@@ -77,9 +77,9 @@ describe('SelectSqlBuilder tests', () => {
         // ARRANGE
         const filterTypes = new Map<Filter, FieldInfo>();
         const selectSqlBuilder = selectBuilderObjectMother.get();
-        const filter = filterObjectMother.get('gender', 'is', 'male');
+        const filter = filterObjectMother.get('gender', 'is', 'male', 'string');
 
-        const selector = selectorObjectMother.get('Patient', [], [filter]);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], [filter]);
 
         // ACT
         const sqlQuery = selectSqlBuilder
@@ -108,7 +108,7 @@ describe('SelectSqlBuilder tests', () => {
         // ARRANGE
         const filterTypes = new Map<Filter, FieldInfo>();
         const selectSqlBuilder = selectBuilderObjectMother.get();
-        const field = fieldObjectMother.get('gender');
+        const field = fieldObjectMother.get('gender', 'gender', 'string');
 
         // ACT
         const sqlQuery = selectSqlBuilder
@@ -123,7 +123,7 @@ describe('SelectSqlBuilder tests', () => {
         // ARRANGE
         const filterTypes = new Map<Filter, FieldInfo>();
         const selectSqlBuilder = selectBuilderObjectMother.get();
-        const field = fieldObjectMother.get('gender');
+        const field = fieldObjectMother.get('gender', 'gender', 'string');
 
         // ACT
         const sqlQuery = selectSqlBuilder
@@ -138,7 +138,7 @@ describe('SelectSqlBuilder tests', () => {
         // ARRANGE
         const filterTypes = new Map<Filter, FieldInfo>();
         const selectSqlBuilder = selectBuilderObjectMother.get();
-        const field = fieldObjectMother.get('gender');
+        const field = fieldObjectMother.get('gender', 'gender', 'string');
 
         // ACT
         const sqlQuery = selectSqlBuilder
@@ -153,7 +153,7 @@ describe('SelectSqlBuilder tests', () => {
         // ARRANGE
         const filterTypes = new Map<Filter, FieldInfo>();
         const selectSqlBuilder = selectBuilderObjectMother.get();
-        const field = fieldObjectMother.get('gender');
+        const field = fieldObjectMother.get('gender', 'gender', 'string');
 
         // ACT
         const sqlQuery = selectSqlBuilder
@@ -169,7 +169,7 @@ describe('SelectSqlBuilder tests', () => {
         const filterTypes = new Map<Filter, FieldInfo>();
         const fieldTypes = new Map<Field, FieldInfo>();
         const selectSqlBuilder = selectBuilderObjectMother.get();
-        const field = fieldObjectMother.get('gender');
+        const field = fieldObjectMother.get('gender', 'gender' ,'string');
 
         // ACT
         const sqlQuery = selectSqlBuilder
@@ -185,7 +185,7 @@ describe('SelectSqlBuilder tests', () => {
         const filterTypes = new Map<Filter, FieldInfo>();
         const fieldTypes = new Map<Field, FieldInfo>();
         const selectSqlBuilder = selectBuilderObjectMother.get();
-        const field = fieldObjectMother.get('gender');
+        const field = fieldObjectMother.get('gender', 'gender', 'string');
 
         // ACT
         const sqlQuery = selectSqlBuilder
@@ -201,7 +201,7 @@ describe('SelectSqlBuilder tests', () => {
         const filterTypes = new Map<Filter, FieldInfo>();
         const fieldTypes = new Map<Field, FieldInfo>();
         const selectSqlBuilder = selectBuilderObjectMother.get();
-        const field = fieldObjectMother.get('gender');
+        const field = fieldObjectMother.get('gender', 'gender', 'string');
 
         // ACT
         const sqlQuery = selectSqlBuilder
@@ -216,11 +216,13 @@ describe('SelectSqlBuilder tests', () => {
         // ARRANGE
         const filterTypes = new Map<Filter, FieldInfo>();
         const selectSqlBuilder = selectBuilderObjectMother.get();
-        const field = fieldObjectMother.get('gender');
+        const field = fieldObjectMother.get('gender', 'gender', 'string');
+        const fieldTypes = new Map<Field, FieldInfo>();
+
 
         // ACT
         const sqlQuery = selectSqlBuilder
-            .fieldCiLow(field, patientSelector)
+            .fieldCiLow(field, fieldTypes, patientSelector)
             .build(patientSelector, filterTypes);
 
         // ASSERT
@@ -231,11 +233,12 @@ describe('SelectSqlBuilder tests', () => {
         // ARRANGE
         const filterTypes = new Map<Filter, FieldInfo>();
         const selectSqlBuilder = selectBuilderObjectMother.get();
-        const field = fieldObjectMother.get('gender');
+        const field = fieldObjectMother.get('gender', 'gender', 'string');
+        const fieldTypes = new Map<Field, FieldInfo>();
 
         // ACT
         const sqlQuery = selectSqlBuilder
-            .fieldCiHigh(field, patientSelector)
+            .fieldCiHigh(field, fieldTypes, patientSelector)
             .build(patientSelector, filterTypes);
 
         // ASSERT
@@ -260,7 +263,7 @@ describe('SelectSqlBuilder tests', () => {
         // ARRANGE
         const filterTypes = new Map<Filter, FieldInfo>();
         const selectSqlBuilder = selectBuilderObjectMother.get();
-        const field = fieldObjectMother.get('gender');
+        const field = fieldObjectMother.get('gender', 'gender', 'string');
 
         // ACT
         const sqlQuery = selectSqlBuilder
@@ -278,8 +281,8 @@ describe('SelectSqlBuilder tests', () => {
         const filterTypes = new Map<Filter, FieldInfo>();
         const selectSqlBuilder = selectBuilderObjectMother.get();
 
-        const breakdown = breakdownObjectMother.get('Observation', 'issued', 1209600);
-        const selector = selectorObjectMother.get('Observation', [], [], undefined, breakdown);
+        const breakdown = breakdownObjectMother.get('Observation', 'issued', 1209600, 'dateTime');
+        const selector = selectorObjectMother.get('Observation', 'observation', [], [], undefined);
 
         const queryPattern = (fieldCompiled: string, step: number) => {
             return `SELECT to_timestamp(floor((extract('epoch' from (${fieldCompiled})::timestamp) / ${step} )) * ${step}) AS period_start`
@@ -287,11 +290,11 @@ describe('SelectSqlBuilder tests', () => {
 
         // ACT
         const sqlQuery = selectSqlBuilder
-            .breakdownPeriodStart()
+            .breakdownPeriodStart(breakdown.slices.step, 'fieldLabel')
             .build(selector, filterTypes);
 
         // ASSERT
-        expect(sqlQuery).toEqual(queryPattern("resource->>'issued'", 1209600));
+        expect(sqlQuery).toEqual(queryPattern("fieldLabel", 1209600));
     })
 
     it('can add FROM statement builder', () => {

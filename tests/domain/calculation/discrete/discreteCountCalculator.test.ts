@@ -5,10 +5,8 @@ import fieldObjectMother from "../../../utils/objectMothers/models/fieldObjectMo
 import selectorObjectMother from "../../../utils/objectMothers/models/selectorObjectMother";
 
 describe('discreteCountCalculator tests', () => {
-    const field = fieldObjectMother.get('gender');
-    const complexPathField = fieldObjectMother.get('path.complex');
-    const fieldWithCaps = fieldObjectMother.get('path.Complex');
-    const selector = selectorObjectMother.get('Patient', [field], []);
+    const field = fieldObjectMother.get('gender', 'gender', 'string');
+    const selector = selectorObjectMother.get('Patient', 'patient', [field], []);
     const measure = CategoricalMesure.count;
 
     it('with one male, value is counted only once', () => {
@@ -66,6 +64,7 @@ describe('discreteCountCalculator tests', () => {
     it('with complex field path, field path matches query field path with . replaced by _', () => {
         // ARRANGE
         const queryResult = getQueryAndResult([{ path_complex: 'female', count: 3 }, { path_complex: 'male', count: 2 }]);
+        const complexPathField = fieldObjectMother.get('path.Complex', 'path.complex', 'type');
 
         const queryDataResults = queryDataResultsObjectMother.get();
         queryDataResults.addResult(selector, complexPathField, measure, queryResult);
@@ -86,6 +85,7 @@ describe('discreteCountCalculator tests', () => {
     it('with field with caps, field path matches query field path with caps removed', () => {
         // ARRANGE
         const queryResult = getQueryAndResult([{ path_complex: 'female', count: 3 }, { path_complex: 'male', count: 2 }]);
+        const fieldWithCaps = fieldObjectMother.get('path.Complex', 'path_Complex', 'type');
 
         const queryDataResults = queryDataResultsObjectMother.get();
         queryDataResults.addResult(selector, fieldWithCaps, measure, queryResult);
@@ -95,7 +95,6 @@ describe('discreteCountCalculator tests', () => {
 
         // ASSERT
         expect(discreteCounts.length).toEqual(2);
-
         expect(discreteCounts[0].label).toEqual('female')
         expect(discreteCounts[0].value).toEqual(3);
 

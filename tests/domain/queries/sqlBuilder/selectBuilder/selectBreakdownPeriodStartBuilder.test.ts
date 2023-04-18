@@ -9,26 +9,26 @@ describe('selectBreakdownPeriodStartBuilder tests', () => {
 
     it('with non array field, field is selected from resource', () => {
         // ARRANGE
-        const breakdown = breakdownObjectMother.get('Observation', 'issued', 1209600);
+        const breakdown = breakdownObjectMother.get('Observation', 'issued', 1209600, 'datetime');
 
         // ACT
-        const result = selectBreakdownPeriodStartBuilder.build(breakdown);
+        const result = selectBreakdownPeriodStartBuilder.build(breakdown.slices.step, 'breakdownLabel');
 
         // ASSERT
-        expect(result).toEqual(queryPattern("resource->>'issued'", 1209600))
+        expect(result).toEqual(queryPattern("breakdownLabel", 1209600))
     })
 
     it('with array field, field is selected from name convention', () => {
         // ARRANGE
-        const breakdown = breakdownObjectMother.get('Encounter', 'location.period.start', 1209600);
+        const breakdown = breakdownObjectMother.get('Encounter', 'location.period.start', 1209600, 'dateTime');
 
         resourceArrayFields.values = ['location'];
 
 
         // ACT
-        const result = selectBreakdownPeriodStartBuilder.build(breakdown);
+        const result = selectBreakdownPeriodStartBuilder.build(breakdown.slices.step, 'breakdownLabel');
 
         // ASSERT
-        expect(result).toEqual(queryPattern("location->'period'->>'start'", 1209600))
+        expect(result).toEqual(queryPattern("breakdownLabel", 1209600))
     })
 })

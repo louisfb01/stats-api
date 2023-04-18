@@ -25,7 +25,7 @@ describe('fieldMetricsFactory tests', () => {
     numericalTypes.forEach(fieldType => {
         it(`${fieldType} field, all metrics chosen, all continuous metrics gotten`, () => {
             // ARRANGE
-            const field = fieldObjectMother.get('field');
+            const field = fieldObjectMother.get('field', 'field', 'string');
             const aidboxField = fieldInfoObjectMother.get(fieldType);
 
             const fieldsMap = getFieldsMap([field], [aidboxField]);
@@ -45,7 +45,7 @@ describe('fieldMetricsFactory tests', () => {
         it(`${fieldType} field, two measures chosen, both continuous metrics gotten`, () => {
             // ARRANGE
             const measures = measuresObjectMother.get([], [ContinuousMesure.count, ContinuousMesure.stdev])
-            const field = fieldObjectMother.get('field');
+            const field = fieldObjectMother.get('field', 'field', 'string');
             const aidboxField = fieldInfoObjectMother.get(fieldType);
 
             const fieldsMap = getFieldsMap([field], [aidboxField]);
@@ -63,7 +63,7 @@ describe('fieldMetricsFactory tests', () => {
 
     it(`string field, all metrics chosen, all categorical metrics gotten`, () => {
         // ARRANGE
-        const field = fieldObjectMother.get('field');
+        const field = fieldObjectMother.get('field', 'field', 'string');
         const aidboxField = fieldInfoObjectMother.get('string');
 
         const fieldsMap = getFieldsMap([field], [aidboxField]);
@@ -82,7 +82,7 @@ describe('fieldMetricsFactory tests', () => {
     it(`string field, two measures chosen, both categorical metrics gotten`, () => {
         // ARRANGE
         const measures = measuresObjectMother.get([CategoricalMesure.count, CategoricalMesure.marginals], [])
-        const field = fieldObjectMother.get('field');
+        const field = fieldObjectMother.get('field', 'field', 'string');
         const aidboxField = fieldInfoObjectMother.get('string');
 
         const fieldsMap = getFieldsMap([field], [aidboxField]);

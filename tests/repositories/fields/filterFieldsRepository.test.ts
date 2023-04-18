@@ -14,14 +14,14 @@ describe('filterFieldsRepository tests', () => {
     const filterB = filterObjectMother.get('fieldB', 'is', 'value');
     const filterC = filterObjectMother.get('field.path.subPathC', 'is', 'value');
 
-    const patientSelector = selectorObjectMother.get('Patient', [], [filterA, filterB]);
-    const observationSelector = selectorObjectMother.get('Observation', [], [filterC]);
+    const patientSelector = selectorObjectMother.get('Patient', 'patient', [], [filterA, filterB]);
+    const observationSelector = selectorObjectMother.get('Observation', 'observation', [], [filterC]);
 
     const patientFieldsQuery = 'SELECT * FROM Patient';
     const observationFieldsQuery = 'SELECT * FROM Observation';
 
-    const patientFieldsReponse = { fielda: 'string', fieldb: 'number' }; // Lower case of field name important as postgres always lower cases column names.
-    const observationFieldsReponse = { field_path_subpathc: 'date' }; // . in path is replace with _
+    const patientFieldsReponse = { fielda: 'TEXT', fieldb: 'FLOAT' }; // Lower case of field name important as postgres always lower cases column names.
+    const observationFieldsReponse = { field_path_subpathc: 'DATE' }; // . in path is replace with _
     const observationFieldsNullTypeReponse = { field_path_subpathc: null }; // . in path is replace with _
 
     beforeEach(() => {
@@ -40,8 +40,8 @@ describe('filterFieldsRepository tests', () => {
 
         aidboxProxy.executeQuery = jest.fn();
         when(aidboxProxy.executeQuery as any)
-            .calledWith(patientFieldsQuery).mockReturnValue(Promise.reject(new Error('errorA')))
-            .calledWith(observationFieldsQuery).mockReturnValue(Promise.reject(new Error('errorB')))
+            .calledWith(patientFieldsQuery).mockReturnValue(Promise.reject(new Error('errorA')).catch((error)=> {return error}))
+            .calledWith(observationFieldsQuery).mockReturnValue(Promise.reject(new Error('errorB')).catch((error)=> {return error}))
 
         // ACT
         const result = await filterFieldsRepository.getFieldsDataFromRequest(summarizeRequest);
@@ -108,7 +108,7 @@ describe('filterFieldsRepository tests', () => {
 
     it('with one selector, selector is join with two fields, responses are returned by field.', async () => {
         // ARRANGE
-        const topSelector = selectorObjectMother.get('Observation', [], [], patientSelector);
+        const topSelector = selectorObjectMother.get('Observation', 'observation', [], [], patientSelector);
         const summarizeRequest = summarizeRequestBodyObjectMother.get([topSelector]);
 
         when(getFilterFieldTypesQuery.getQuery as any)
