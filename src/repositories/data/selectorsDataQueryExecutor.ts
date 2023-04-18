@@ -1,5 +1,3 @@
-import continuousBreakdownQuery from "../../domain/queries/breakdown/continuousBreakdownQuery";
-import timeBreakdownQuery from "../../domain/queries/breakdown/timeBreakdownQuery";
 import countResourceQuery from "../../domain/queries/countResourceQuery";
 import QueryDataResults from "../../domain/queries/queryDataResults";
 import aidboxProxy from "../../infrastructure/aidbox/aidboxProxy";
@@ -21,14 +19,6 @@ async function executeQueries(queryDataResults: QueryDataResults,
     await getFieldsDataQueryExecutor(queryDataResults, selector, measures, fieldTypes, filterTypes, selector)
 }
 
-async function executeBreakdownQuery(queryDataResults: QueryDataResults,
-    selector: Selector,
-    fieldTypes: Map<Field, FieldInfo>,
-    filterTypes: Map<Filter, FieldInfo>): Promise<void> {
-
-    await getBreakdownResult(queryDataResults, selector, filterTypes, fieldTypes)
-}
-
 async function getTotalCount(queryDataResults: QueryDataResults, selector: Selector, filterTypes: Map<Filter, FieldInfo>, fieldTypes: Map<Field, FieldInfo>) {
     const countQuery = countResourceQuery.getQuery(selector, filterTypes, fieldTypes);
     console.warn(countQuery);
@@ -36,23 +26,6 @@ async function getTotalCount(queryDataResults: QueryDataResults, selector: Selec
     const countResult = await aidboxProxy.executeQuery(countQuery) as any[];
     queryDataResults.addSelectorResult(selector, { query: countQuery, result: countResult[0] });
     return queryDataResults
-}
-
-async function getBreakdownResult(queryDataResults: QueryDataResults, selector: Selector, filterTypes: Map<Filter, FieldInfo>, fieldTypes: Map<Field, FieldInfo>) {
-    if (selector.breakdown) {
-        var breakdownQuery: string
-        if (selector.breakdown.query) {
-            breakdownQuery = selector.breakdown.query
-        }
-        else {
-            breakdownQuery = selector.breakdown.resource.fieldType == 'dateTime' ?
-                timeBreakdownQuery.getQuery(selector, filterTypes, fieldTypes) : continuousBreakdownQuery.getQuery(selector, filterTypes, fieldTypes);
-        }
-        console.warn(breakdownQuery);
-        const breakdownResult = await aidboxProxy.executeQuery(breakdownQuery) as any[];
-
-        queryDataResults.addSelectorBreakdownResult(selector, { query: breakdownQuery, result: breakdownResult });
-    }
 }
 
 async function getFieldsDataQueryExecutor(
@@ -75,5 +48,5 @@ async function getFieldsDataQueryExecutor(
 }
 
 export default {
-    executeQueries, executeBreakdownQuery
+    executeQueries
 }

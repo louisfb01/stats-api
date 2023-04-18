@@ -1,4 +1,3 @@
-import Breakdown from "./breakdown";
 import Field from "./field";
 import Filter from "./filter";
 
@@ -8,5 +7,4 @@ export default interface Selector {
     filters: Filter[];
     fields: Field[];
     joins?: Selector;
-    breakdown?: Breakdown;
 }

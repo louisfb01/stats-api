@@ -1,4 +1,5 @@
 import FieldInfo from "../../../models/fieldInfo";
+import Breakdown from "../../../models/request/breakdown";
 import BreakdownResource from "../../../models/request/breakdownResource";
 import Field from "../../../models/request/field";
 import Filter from "../../../models/request/filter";
@@ -8,16 +9,15 @@ import SqlBuilder from "../sqlBuilder/sqlBuilder";
 
 function getQuery(selector: Selector,
     filterTypes: Map<Filter, FieldInfo>,
-    fieldTypes: Map<Field, FieldInfo>): string {
+    fieldTypes: Map<Field, FieldInfo>,
+    breakdown: Breakdown): string {
 
-    if (!selector.breakdown) throw new Error('Must have breakdown');
-
-    const breakdownField = selector.breakdown.resource;
+    const breakdownField = breakdown.resource;
     const breakdownFieldLabel = fieldLabelFormatter.formatLabel(findField(breakdownField, selector).label)
 
-    const step = selector.breakdown?.slices.step;
-    const max = parseInt(selector.breakdown?.slices.max);
-    const min = parseInt(selector.breakdown?.slices.min);
+    const step = breakdown?.slices.step;
+    const max = parseFloat(breakdown?.slices.max);
+    const min = parseFloat(breakdown?.slices.min);
 
     const sqlBuilder = new SqlBuilder()
         .select()

@@ -1,4 +1,5 @@
 import { DateTime } from "luxon";
+import Breakdown from "../../../models/request/breakdown";
 import Selector from "../../../models/request/selector";
 import BreakdownResponse from "../../../models/response/breakdownResponse";
 import QueryDataResults from "../../queries/queryDataResults";
@@ -21,10 +22,10 @@ function getDateFromMiliseconds(miliseconds: number) {
 }
 
 function calculate(selector: Selector,
-    queryDataResults: QueryDataResults): BreakdownResponse {
+    queryDataResults: QueryDataResults,
+    breakdown: Breakdown): BreakdownResponse {
 
-    if (!selector.breakdown) throw new Error('Must have breakdown to process');
-    const breakdown = selector.breakdown;
+    if (!breakdown) throw new Error('Must have breakdown to process');
 
     const breakdownQueryAndResults = queryDataResults.getSelectorBreakdownResult(selector);
     const breakdownResults = breakdownQueryAndResults.result as any[];
@@ -50,7 +51,7 @@ function calculate(selector: Selector,
         breakdownSteps.push(breakdownStep);
     }
 
-    return { query: breakdownQueryAndResults.query, result: breakdownSteps, field: selector.breakdown.resource.field, fieldType: selector.breakdown.resource.fieldType };
+    return { query: breakdownQueryAndResults.query, result: breakdownSteps, field: breakdown.resource.field, fieldType: breakdown.resource.fieldType };
 }
 
 export default {

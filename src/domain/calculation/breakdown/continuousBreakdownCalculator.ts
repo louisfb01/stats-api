@@ -1,21 +1,23 @@
+import Breakdown from "../../../models/request/breakdown";
 import Selector from "../../../models/request/selector";
 import BreakdownResponse from "../../../models/response/breakdownResponse";
 import QueryDataResults from "../../queries/queryDataResults";
 
 
 function calculate(selector: Selector,
-    queryDataResults: QueryDataResults): BreakdownResponse {
+    queryDataResults: QueryDataResults,
+    breakdown: Breakdown): BreakdownResponse {
 
-    if (!selector.breakdown) throw new Error('Must have breakdown to process');
+    if (!breakdown) throw new Error('Must have breakdown to process');
 
     const breakdownQueryAndResults = queryDataResults.getSelectorBreakdownResult(selector);
     const breakdownResults = breakdownQueryAndResults.result as any[];
 
     const breakdownSteps = new Array<{ periodStart: string, periodCount: number | null }>();
 
-    var step = selector.breakdown.slices.step;
-    const min = parseFloat(selector.breakdown.slices.min);
-    const max = parseFloat(selector.breakdown.slices.max);
+    var step = breakdown.slices.step;
+    const min = parseFloat(breakdown.slices.min);
+    const max = parseFloat(breakdown.slices.max);
     if((max-min) / step > 100){ //limit amount of breakdown steps
         step = (max-min) / 100
     }
@@ -34,7 +36,7 @@ function calculate(selector: Selector,
     }
 
 
-    return { query: breakdownQueryAndResults.query, result: breakdownSteps, field: selector.breakdown.resource.field, fieldType: selector.breakdown.resource.fieldType };
+    return { query: breakdownQueryAndResults.query, result: breakdownSteps, field: breakdown.resource.field, fieldType: breakdown.resource.fieldType };
 }
 
 export default {
