@@ -10,19 +10,22 @@ import QueryDataResults from "../../queries/queryDataResults";
 function calculate(selector: Selector,
     queryDataResults: QueryDataResults,
     field: Field,
-    measure: ContinuousMesure | CategoricalMesure): DiscreteVariableCountReponse[] {
+    measure: ContinuousMesure | CategoricalMesure): DiscreteVariableCountReponse[] | Error {
 
-    const countResults = queryDataResults.getResult(selector, field, measure).result as any[];
+    const countResults = queryDataResults.getResult(selector, field, measure);
+    if(countResults instanceof Error){
+        return countResults
+    }
     const fieldLabelNormalized = fieldLabelFormatter.formatLabel(field.label);
 
     const discreteVariableCounts = new Array<DiscreteVariableCountReponse>();
 
-    if(countResults.length == 0){
+    if(countResults.result.length == 0){
         const discreteVariableCounts  = [{ label: fieldLabelNormalized, value: 0 }];
         return discreteVariableCounts;
     }
 
-    countResults.forEach(countResult => {
+    countResults.result.forEach((countResult:any) => {
         const discreteVariableCount: DiscreteVariableCountReponse = {
             label: countResult[fieldLabelNormalized],
             value: countResult.count

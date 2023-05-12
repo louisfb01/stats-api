@@ -19,7 +19,7 @@ function getSummarizeReponse(selector: Selector,
     const countQueryAndResult = queryDataResults.getSelectorResult(selector);
 
     if (countQueryAndResult.result instanceof Error) {
-        return { total: 0, error: countQueryAndResult.result, fieldResponses: [], query: '' };
+        return { total: 0, error: countQueryAndResult.result.message, fieldResponses: [], query: countQueryAndResult.query };
     }
 
     const fieldResponses: FieldReponse[] = [];

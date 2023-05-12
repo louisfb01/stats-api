@@ -30,8 +30,7 @@ function getBreakdownReponses(summarizeRequest: SummarizeRequestBody, queryDataR
         return breakdownReponse;
     }
     else {
-        const countQueryAndResult = queryDataResults.getSelectorBreakdownResult(summarizeRequest.selectors[0]);
-        return { query: countQueryAndResult.query, result: [{ periodStart: '', periodCount: null }], field: '', fieldType: '' };
+        return { query: '', result: [{ periodStart: '', periodCount: null }], field: '', fieldType: '' };
     }
 }
 

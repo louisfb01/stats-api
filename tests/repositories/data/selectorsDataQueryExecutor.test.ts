@@ -14,11 +14,12 @@ import breakdownObjectMother from "../../utils/objectMothers/models/request/brea
 import measuresObjectMother from "../../utils/objectMothers/models/request/measuresObjectMother";
 import selectorObjectMother from "../../utils/objectMothers/models/selectorObjectMother";
 import aidboxFieldResponseObjectMother from "../../utils/objectMothers/models/fieldInfoObjectMother";
+import fieldsMeasureDataQueryExecutor from "../../../src/repositories/data/fieldsMeasureDataQueryExecutor";
 
 describe('selectorsDataQueryExecutor tests', () => {
     const measures = measuresObjectMother.getAllOptionMeasures();
-    const fieldMaps = new Map<Field, FieldInfo>();
-    const filterMaps = new Map<Filter, FieldInfo>();
+    let fieldMaps = new Map<Field, FieldInfo>();
+    let filterMaps = new Map<Filter, FieldInfo>();
     const birthdateField = fieldObjectMother.get('birthDate', 'birthDate', 'dateTime');
     const dateTimeFieldType = aidboxFieldResponseObjectMother.get('dateTime');
 
@@ -29,9 +30,10 @@ describe('selectorsDataQueryExecutor tests', () => {
     const breakdownQuery = "SELECT count(*) AS count_breakdown from Patient";
     const breakdownResult = { count: 54 }
 
+    const textFieldType = aidboxFieldResponseObjectMother.get('string');
 
     beforeEach(() => {
-        fieldsDataQueryExecutor.executeQueries = jest.fn();
+        fieldsMeasureDataQueryExecutor.executeQuery = jest.fn();
         aidboxProxy.executeQuery = jest.fn();
         countResourceQuery.getQuery = jest.fn();
         timeBreakdownQuery.getQuery = jest.fn();
@@ -126,6 +128,7 @@ describe('selectorsDataQueryExecutor tests', () => {
         const fieldB = fieldObjectMother.get('fieldB', 'labelB', 'string');
 
         const selector = selectorObjectMother.get('Patient', 'patient', [fieldA, fieldB], []);
+        fieldMaps = getFieldsMap([fieldA, fieldB], [textFieldType, textFieldType])
 
         when(countResourceQuery.getQuery as any)
             .calledWith(selector, filterMaps, fieldMaps)
@@ -141,8 +144,8 @@ describe('selectorsDataQueryExecutor tests', () => {
         await selectorsDataQueryExecutor.executeQueries(queryDataResults, selector, measures, fieldMaps, filterMaps);
 
         // ASSERT
-        expect(fieldsDataQueryExecutor.executeQueries).toBeCalledWith(queryDataResults, selector, measures, fieldA, fieldMaps, filterMaps);
-        expect(fieldsDataQueryExecutor.executeQueries).toBeCalledWith(queryDataResults, selector, measures, fieldB, fieldMaps, filterMaps);
+        expect(fieldsMeasureDataQueryExecutor.executeQuery).toBeCalledWith(queryDataResults, selector, fieldA, measures, fieldMaps, filterMaps);
+        expect(fieldsMeasureDataQueryExecutor.executeQuery).toBeCalledWith(queryDataResults, selector, fieldB, measures, fieldMaps, filterMaps);
     })
 
     function getFieldsMap(fields: Field[], aidboxFields: FieldInfo[]) {

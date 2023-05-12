@@ -8,12 +8,15 @@ import QueryDataResults from "../../queries/queryDataResults";
 function calculate(selector: Selector,
     queryDataResults: QueryDataResults,
     field: Field,
-    measure: ContinuousMesure | CategoricalMesure): ContinuousMeanResponse {
+    measure: ContinuousMesure | CategoricalMesure): ContinuousMeanResponse | Error{
 
-    const countResults = queryDataResults.getResult(selector, field, measure).result as any[];
+    const countResults = queryDataResults.getResult(selector, field, measure);
+    if(countResults instanceof Error){
+        return countResults
+    }
     return {
-        mean: countResults[0].mean,
-        populationSize: countResults[0].count
+        mean: countResults.result[0].mean,
+        populationSize: countResults.result[0].count
     };
 }
 

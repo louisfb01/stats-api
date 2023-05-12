@@ -42,6 +42,12 @@ joinIdData.set("imagingstudy", {
     fromSelectorTableId: ".resource->'subject'->>'id'",
 })
 
+joinIdData.set("diagnosticreport", {
+    selectInJoinId: "resource->'subject'->>'id' AS subject_id",
+    joinTableId: ".subject_id",
+    fromSelectorTableId: ".resource->'subject'->>'id'",
+})
+
 joinIdData.set("location", {
     selectInJoinId: "id",
     joinTableId: ".id",

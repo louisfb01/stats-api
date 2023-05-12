@@ -34,7 +34,7 @@ describe('summarizeReponseProcessor tests', () => {
         const summarizeReponse = summarizeReponseProcessor.getSummarizeReponse(selector, measures, queryDataResults, fieldsMap);
 
         // ASSERT
-        expect(summarizeReponse.error).toEqual(new Error('error'));
+        expect(summarizeReponse.error).toEqual("error");
     })
 
     it('gets aidbox total and queryUri for summarize response', () => {

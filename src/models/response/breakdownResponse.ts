@@ -3,4 +3,5 @@ export default interface BreakdownResponse {
     result: { periodStart: string, periodCount: number | null }[];
     field: string;
     fieldType: string;
+    error? : string;
 }

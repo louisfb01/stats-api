@@ -24,7 +24,11 @@ export default class FieldReponseBuilder {
             return { [mc.metric]: value };
         })
 
-        const queries = queryDataResults.getFieldResults(selector, this.field).map(qr => qr.query);
+        const results = queryDataResults.getFieldResults(selector, this.field)
+        if(results instanceof Error){
+            return Object.assign({ field: this.field.path, measure}, ...metrics);
+        }
+        const queries = results.map(qr => qr.query);
         return Object.assign({ field: this.field.path, queries, measure}, ...metrics);
     };
 }

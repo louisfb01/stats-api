@@ -23,7 +23,7 @@ describe('fieldsDataQueryExecutor tests', () => {
     const filterMaps = new Map<Filter, FieldInfo>();
 
     beforeEach(() => {
-        fieldsMeasureDataQueryExecutor.exectuteQuery = jest.fn();
+        fieldsMeasureDataQueryExecutor.executeQuery = jest.fn();
     })
 
 
@@ -38,7 +38,7 @@ describe('fieldsDataQueryExecutor tests', () => {
         await fieldsDataQueryExecutor.executeQueries(queryDataResults, selector, allOptionsMeasures, field, fieldsMap, filterMaps);
 
         // ASSERT
-        expect(fieldsMeasureDataQueryExecutor.exectuteQuery).toHaveBeenCalledWith(queryDataResults, selector, field, allOptionsMeasures, fieldsMap, filterMaps);
+        expect(fieldsMeasureDataQueryExecutor.executeQuery).toHaveBeenCalledWith(queryDataResults, selector, field, allOptionsMeasures, fieldsMap, filterMaps);
     })
 
     it('decimal field, all measures chosen, all continuous measures calculated', async () => {
@@ -52,7 +52,7 @@ describe('fieldsDataQueryExecutor tests', () => {
         await fieldsDataQueryExecutor.executeQueries(queryDataResults, selector, allOptionsMeasures, field, fieldsMap, filterMaps);
 
         // ASSERT
-        expect(fieldsMeasureDataQueryExecutor.exectuteQuery).toHaveBeenCalledWith(queryDataResults, selector, field, allOptionsMeasures, fieldsMap, filterMaps);
+        expect(fieldsMeasureDataQueryExecutor.executeQuery).toHaveBeenCalledWith(queryDataResults, selector, field, allOptionsMeasures, fieldsMap, filterMaps);
     })
 
     it('integer field, two continuous measures chosen, both measures calculated', async () => {
@@ -67,7 +67,7 @@ describe('fieldsDataQueryExecutor tests', () => {
         await fieldsDataQueryExecutor.executeQueries(queryDataResults, selector, measures, field, fieldsMap, filterMaps);
 
         // ASSERT
-        expect(fieldsMeasureDataQueryExecutor.exectuteQuery).toHaveBeenCalledWith(queryDataResults, selector, field, measures, fieldsMap, filterMaps);
+        expect(fieldsMeasureDataQueryExecutor.executeQuery).toHaveBeenCalledWith(queryDataResults, selector, field, measures, fieldsMap, filterMaps);
     })
 
     it('text field, all measures chosen, all categorical measures calculated', async () => {
@@ -81,7 +81,7 @@ describe('fieldsDataQueryExecutor tests', () => {
         await fieldsDataQueryExecutor.executeQueries(queryDataResults, selector, allOptionsMeasures, field, fieldsMap, filterMaps);
 
         // ASSERT
-        expect(fieldsMeasureDataQueryExecutor.exectuteQuery).toHaveBeenCalledWith(queryDataResults, selector, field, allOptionsMeasures, fieldsMap, filterMaps);
+        expect(fieldsMeasureDataQueryExecutor.executeQuery).toHaveBeenCalledWith(queryDataResults, selector, field, allOptionsMeasures, fieldsMap, filterMaps);
     })
 
     it('text field, two measures chosen, both categorical measures calculated', async () => {
@@ -96,7 +96,7 @@ describe('fieldsDataQueryExecutor tests', () => {
         await fieldsDataQueryExecutor.executeQueries(queryDataResults, selector, measures, field, fieldsMap, filterMaps);
 
         // ASSERT
-        expect(fieldsMeasureDataQueryExecutor.exectuteQuery).toHaveBeenCalledWith(queryDataResults, selector, field, measures, fieldsMap, filterMaps);
+        expect(fieldsMeasureDataQueryExecutor.executeQuery).toHaveBeenCalledWith(queryDataResults, selector, field, measures, fieldsMap, filterMaps);
     })
 
     function getFieldsMap(fields: Field[], aidboxFields: FieldInfo[]) {

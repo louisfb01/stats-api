@@ -57,7 +57,7 @@ describe('fieldsMeasureDataQueryExecutor tests', () => {
                 .mockReturnValue(tp.result);
 
             // ACT
-            await fieldsMeasureDataQueryExecutor.exectuteQuery(queryDataResults, selector, field, measures, fieldsMap,
+            await fieldsMeasureDataQueryExecutor.executeQuery(queryDataResults, selector, field, measures, fieldsMap,
                 filterMaps)
 
             // ASSERT

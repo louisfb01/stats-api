@@ -8,14 +8,17 @@ import QueryDataResults from "../../queries/queryDataResults";
 function calculate(selector: Selector,
     queryDataResults: QueryDataResults,
     field: Field,
-    measure: ContinuousMesure | CategoricalMesure): string {
+    measure: ContinuousMesure | CategoricalMesure): string | Error {
 
-    const countResults = queryDataResults.getResult(selector, field, measure).result as any[];
+    const countResults = queryDataResults.getResult(selector, field, measure);
+    if(countResults instanceof Error){
+        return countResults
+    }
     const fieldPathNormalized = fieldPathFormatter.formatPath(field.path);
 
     const variableCounts = new Map<string, number>();
 
-    countResults.forEach(countResult => {
+    countResults.result.forEach((countResult:any) => {
         variableCounts.set(countResult[fieldPathNormalized], countResult.count);
     });
 

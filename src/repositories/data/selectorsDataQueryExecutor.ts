@@ -7,6 +7,7 @@ import Filter from "../../models/request/filter";
 import Measures from "../../models/request/measures";
 import Selector from "../../models/request/selector";
 import fieldsDataQueryExecutor from "./fieldsDataQueryExecutor";
+import fieldsMeasureDataQueryExecutor from "./fieldsMeasureDataQueryExecutor";
 
 async function executeQueries(queryDataResults: QueryDataResults,
     selector: Selector,
@@ -24,7 +25,12 @@ async function getTotalCount(queryDataResults: QueryDataResults, selector: Selec
     console.warn(countQuery);
 
     const countResult = await aidboxProxy.executeQuery(countQuery) as any[];
-    queryDataResults.addSelectorResult(selector, { query: countQuery, result: countResult[0] });
+    if(countResult instanceof Error){
+        queryDataResults.addSelectorResult(selector, { query: countQuery, result: countResult});
+    }
+    else{
+        queryDataResults.addSelectorResult(selector, { query: countQuery, result: countResult[0] });
+    }
     return queryDataResults
 }
 
@@ -42,7 +48,9 @@ async function getFieldsDataQueryExecutor(
 
     for (let fieldIndex = 0; fieldIndex < selector.fields.length; fieldIndex++) {
         const field = selector.fields[fieldIndex];
-        await fieldsDataQueryExecutor.executeQueries(queryDataResults, topSelector, measures, field, fieldTypes, filterTypes);
+            const fieldType = fieldTypes.get(field);
+            if (!fieldType) throw new Error('No associated field type.');
+            await fieldsMeasureDataQueryExecutor.executeQuery(queryDataResults, selector, field, measures, fieldTypes, filterTypes);
     }
 
 }

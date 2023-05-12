@@ -7,12 +7,15 @@ import QueryDataResults from "../../queries/queryDataResults";
 function calculate(selector: Selector,
     queryDataResults: QueryDataResults,
     field: Field,
-    measure: ContinuousMesure | CategoricalMesure): number[] {
+    measure: ContinuousMesure | CategoricalMesure): number[] | Error{
 
-    const ciResults = queryDataResults.getResult(selector, field, measure).result as any[];
+    const ciResults = queryDataResults.getResult(selector, field, measure);
+    if(ciResults instanceof Error){
+        return ciResults
+    }
     return [
-        ciResults[0].ci_low,
-        ciResults[0].ci_high
+        ciResults.result[0].ci_low,
+        ciResults.result[0].ci_high
     ];
 }
 

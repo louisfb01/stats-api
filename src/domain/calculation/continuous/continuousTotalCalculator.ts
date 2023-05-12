@@ -8,10 +8,13 @@ import QueryDataResults from "../../queries/queryDataResults";
 function calculate(selector: Selector,
     queryDataResults: QueryDataResults,
     field: Field,
-    measure: ContinuousMesure | CategoricalMesure): number {
+    measure: ContinuousMesure | CategoricalMesure): number | Error{
     
-    const countResults = queryDataResults.getResult(selector, field, measure).result as any[];
-    return countResults[0].sum;
+    const countResults = queryDataResults.getResult(selector, field, measure);
+    if(countResults instanceof Error){
+        return countResults
+    }
+    return countResults.result[0].sum;
 }
 
 export default {

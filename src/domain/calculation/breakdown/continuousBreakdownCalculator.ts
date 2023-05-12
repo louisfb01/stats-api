@@ -11,6 +11,9 @@ function calculate(selector: Selector,
     if (!breakdown) throw new Error('Must have breakdown to process');
 
     const breakdownQueryAndResults = queryDataResults.getSelectorBreakdownResult(selector);
+    if(breakdownQueryAndResults instanceof Error){
+        return {query: '', result: [], field: '', fieldType: '', error : breakdownQueryAndResults.message}
+    }
     const breakdownResults = breakdownQueryAndResults.result as any[];
 
     const breakdownSteps = new Array<{ periodStart: string, periodCount: number | null }>();

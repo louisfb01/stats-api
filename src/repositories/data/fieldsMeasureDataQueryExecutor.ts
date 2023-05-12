@@ -16,7 +16,7 @@ measureTypeQuery.set("categorical", groupCountQuery);
 measureTypeQuery.set("dateTime", dateCountQuery);
 
 
-async function exectuteQuery(queryDataResults: QueryDataResults,
+async function executeQuery(queryDataResults: QueryDataResults,
     selector: Selector,
     field: Field,
     measures: Measures,
@@ -56,6 +56,13 @@ function mapResultsbyMeasure(queryDataResults: QueryDataResults,
         for (let measureIndex = 0; measureIndex < measures.continuous.length; measureIndex++) {
             let measure = measures.continuous[measureIndex]
             let fieldResult = {}
+            if(queryResult instanceof Error){
+                queryDataResults.addResult(selector, field, measure, {
+                    query,
+                    result: queryResult
+                });
+                continue;
+            }
             switch (measure) {
                 case 'count':
                     fieldResult = { sum: queryResult[0].sum }
@@ -89,5 +96,5 @@ function mapResultsbyMeasure(queryDataResults: QueryDataResults,
 }
 
 export default {
-    exectuteQuery
+    executeQuery
 }
