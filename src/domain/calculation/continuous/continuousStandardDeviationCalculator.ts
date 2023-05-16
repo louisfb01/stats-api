@@ -7,10 +7,13 @@ import QueryDataResults from "../../queries/queryDataResults";
 function calculate(selector: Selector,
     queryDataResults: QueryDataResults,
     field: Field,
-    measure: ContinuousMesure | CategoricalMesure): number | Error{
+    measure: ContinuousMesure | CategoricalMesure): number | String {
     const countResults = queryDataResults.getResult(selector, field, measure);
     if(countResults instanceof Error){
-        return countResults
+        return countResults.message
+    }
+    else if(countResults.result instanceof Error){
+        return countResults.result.message
     }
     return countResults.result[0].stddev;
 }
