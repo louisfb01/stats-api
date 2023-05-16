@@ -50,7 +50,7 @@ async function getFieldsDataQueryExecutor(
         const field = selector.fields[fieldIndex];
             const fieldType = fieldTypes.get(field);
             if (!fieldType) throw new Error('No associated field type.');
-            await fieldsMeasureDataQueryExecutor.executeQuery(queryDataResults, selector, field, measures, fieldTypes, filterTypes);
+            await fieldsMeasureDataQueryExecutor.executeQuery(queryDataResults, field, measures, fieldTypes, filterTypes, topSelector);
     }
 
 }

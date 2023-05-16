@@ -17,11 +17,11 @@ measureTypeQuery.set("dateTime", dateCountQuery);
 
 
 async function executeQuery(queryDataResults: QueryDataResults,
-    selector: Selector,
     field: Field,
     measures: Measures,
     fieldTypes: Map<Field, FieldInfo>,
-    filterFieldTypes: Map<Filter, FieldInfo>): Promise<void> {
+    filterFieldTypes: Map<Filter, FieldInfo>,
+    topSelector: Selector): Promise<void> {
 
     const fieldType = fieldTypes.get(field);
     if (!fieldType) throw new Error('No matching field type for field');
@@ -35,13 +35,12 @@ async function executeQuery(queryDataResults: QueryDataResults,
             : measureTypeQuery.get("categorical");
 
     if (!queryBuilder) throw new Error('Not a valid measure');
-    const query = queryBuilder.getQuery(selector, field, filterFieldTypes, fieldTypes, measures);
+    const query = queryBuilder.getQuery(topSelector, field, filterFieldTypes, fieldTypes, measures);
 
     console.warn(query);
 
     const queryResult = await aidboxProxy.executeQuery(query);
-
-    mapResultsbyMeasure(queryDataResults, selector, field, measures, isContinousMeasure, queryResult, query)
+    mapResultsbyMeasure(queryDataResults, topSelector, field, measures, isContinousMeasure, queryResult, query)
 
 }
 

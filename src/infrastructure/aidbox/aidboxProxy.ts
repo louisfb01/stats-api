@@ -24,9 +24,14 @@ async function executeQuery(query: string): Promise<any> {
         return response.data;
     }
     catch (error: any) {
-        if (axios.isAxiosError(error) && error.response)
-            error.message = JSON.stringify({ query: query, error: error.response.data })
-        throw error
+        if (axios.isAxiosError(error)){
+            if(error.response){
+                error.message = error.response.data
+            }
+            else
+                error.message = "Could not receive or parse response from database"
+        }
+        return error
     }
 }
 
