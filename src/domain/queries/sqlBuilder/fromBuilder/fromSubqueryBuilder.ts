@@ -15,9 +15,9 @@ function build(selector: Selector,
     .from()
     .resourceTable();
 
-    if (selector.filters.length === 0) return `(${sqlBuilder.possibleJoin(fieldTypes).build(selector, filterTypes)}) as subQuery`;
+    if (selector.condition.conditions.length === 0) return `(${sqlBuilder.possibleJoin(fieldTypes).build(selector, filterTypes)}) as subQuery`;
 
-    const hasArrayFilters = selector.filters.some(f => arrayFieldDetector.isArrayField(f.path));
+    const hasArrayFilters = arrayFieldDetector.hasArrayFilters(selector.condition);
 
     const builderWithFilter = hasArrayFilters
         ? sqlBuilder.crossJoinForArrayFilters().possibleJoin(fieldTypes).where().fieldFilter()

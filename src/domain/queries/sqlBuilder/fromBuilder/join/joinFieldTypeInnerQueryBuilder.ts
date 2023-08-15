@@ -12,9 +12,9 @@ function build(joinSelector: Selector, filterTypes: Map<Filter, FieldInfo>) {
         sqlBuilder.fieldsJson().comma();
     }
 
-    if (joinSelector.filters.length === 0) return sqlBuilder.joinId().from().resourceTable().possibleFieldTypeJoin().build(joinSelector, filterTypes);
+    if (joinSelector.condition.conditions.length === 0) return sqlBuilder.joinId().from().resourceTable().possibleFieldTypeJoin().build(joinSelector, filterTypes);
 
-    const hasArrayFilters = joinSelector.filters.some(f => arrayFieldDetector.isArrayField(f.path));
+    const hasArrayFilters = arrayFieldDetector.hasArrayFilters(joinSelector.condition);
 
     const builderWithFilter = hasArrayFilters
         ? sqlBuilder.joinId().from().resourceTable().crossJoinForArrayFilters().possibleFieldTypeJoin().where().fieldFilter()

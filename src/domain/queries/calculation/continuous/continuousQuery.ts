@@ -30,7 +30,7 @@ function getQuery(selector: Selector, field: Field, filterFieldTypes: Map<Filter
         .crossJoinForArrayFilters(field)
         .possibleJoin(fieldTypes);
 
-    if (selector.filters.length === 0 && !calculatedFields.calculatedFields.has(field.path)) {
+    if (selector.condition.conditions.length === 0 && !calculatedFields.calculatedFields.has(field.path)) {
         return queryToFromPart
             .build(selector, filterFieldTypes);
     }

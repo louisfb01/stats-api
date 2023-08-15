@@ -1,3 +1,4 @@
+import Condition, { flattenConditionToFilters, instanceOfCondition } from "../../../models/request/condition";
 import resourceArrayFields from "../../resourceArrayFields";
 import FieldPathDecomposed from "../fieldPathDecomposed";
 
@@ -12,6 +13,10 @@ function isArrayField(fieldPath: string) {
     return false;
 }
 
+function hasArrayFilters(condition: Condition): boolean{
+    return flattenConditionToFilters(condition).some(f=> isArrayField(f.path))
+}
+
 export default {
-    isArrayField
+    isArrayField, hasArrayFilters
 }

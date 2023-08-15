@@ -6,6 +6,7 @@ import Filter from "../../../models/request/filter";
 import Selector from "../../../models/request/selector";
 import fieldLabelFormatter from "../fieldLabelFormatter";
 import SqlBuilder from "../sqlBuilder/sqlBuilder";
+import { ConditionOperator } from "../../../models/request/conditionOperator"
 
 function getQuery(selector: Selector,
     filterTypes: Map<Filter, FieldInfo>,
@@ -52,7 +53,10 @@ function findField(breakdown: BreakdownResource, selector: Selector): Field {
         selector.joins = {
             resource: breakdown.type,
             label: `${breakdown.type}Breakdown`,
-            filters: [],
+            condition: {
+                conditionOperator: ConditionOperator.and,
+                conditions: []
+            },
             fields: [field]
         }
         return field

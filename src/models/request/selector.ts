@@ -1,10 +1,10 @@
 import Field from "./field";
-import Filter from "./filter";
+import Condition from "./condition";
 
 export default interface Selector {
     resource: string;
     label: string;
-    filters: Filter[];
+    condition: Condition;
     fields: Field[];
     joins?: Selector;
 }

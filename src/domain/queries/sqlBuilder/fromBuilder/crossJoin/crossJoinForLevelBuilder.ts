@@ -1,3 +1,4 @@
+import { flattenConditionToFilters } from "../../../../../models/request/condition";
 import Field from "../../../../../models/request/field";
 import Selector from "../../../../../models/request/selector";
 import CrossJoinFieldLevelBuilder from "./crossJoinFieldLevelBuilder";
@@ -12,7 +13,8 @@ export default class CrossJoinForLevelBuilder {
             uniqueFieldPaths.set(field.path, field.label)
         }
 
-        selector.filters.forEach(filter => uniqueFieldPaths.set(filter.path, filter.path));
+        flattenConditionToFilters(selector.condition).forEach(filter =>
+            uniqueFieldPaths.set(filter.path, filter.path));
 
         this.fieldLevelBuilders = new Array<CrossJoinFieldLevelBuilder>();
         for (let field of uniqueFieldPaths) {

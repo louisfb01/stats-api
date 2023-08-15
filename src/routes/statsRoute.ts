@@ -7,7 +7,7 @@ var router = express.Router();
 router.post('/summarize', async (req, res, next) => {
     try {
         const body: SummarizeRequestBody = req.body;
-
+        console.log(body)
         const response = await statsServices.getStats(body);
         res.send(response);
     }

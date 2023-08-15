@@ -13,9 +13,9 @@ function getQuery(selector: Selector, filterTypes: Map<Filter, FieldInfo>): stri
         .from()
         .resourceTable();
 
-    if (selector.filters.length === 0) return sqlBuilder.possibleFieldTypeJoin().build(selector, filterTypes);
+    if (selector.condition.conditions.length === 0) return sqlBuilder.possibleFieldTypeJoin().build(selector, filterTypes);
 
-    const hasArrayFilters = selector.filters.some(f => arrayFieldDetector.isArrayField(f.path));
+    const hasArrayFilters = arrayFieldDetector.hasArrayFilters(selector.condition);
 
     const builderWithFilter = hasArrayFilters
         ? sqlBuilder.crossJoinForArrayFilters().possibleFieldTypeJoin().where().fieldFilter()
