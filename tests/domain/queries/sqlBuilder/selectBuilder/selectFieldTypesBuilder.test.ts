@@ -1,4 +1,5 @@
 import selectFieldTypesBuilder from "../../../../../src/domain/queries/sqlBuilder/selectBuilder/selectFieldTypesBuilder";
+import { ConditionOperator } from "../../../../../src/models/request/conditionOperator";
 import fieldObjectMother from "../../../../utils/objectMothers/models/fieldObjectMother"
 import selectorObjectMother from "../../../../utils/objectMothers/models/selectorObjectMother";
 
@@ -8,7 +9,7 @@ describe('selectFieldTypeBuilder tests', () => {
         const genderField = fieldObjectMother.get('gender', 'gender', 'string');
         const ageField = fieldObjectMother.get('age', 'age', 'integer');
 
-        const selector = selectorObjectMother.get('Patient', 'patient', [genderField, ageField], [])
+        const selector = selectorObjectMother.get('Patient', 'patient', [genderField, ageField], {conditionOperator:ConditionOperator.and, conditions:[]})
 
         // ACT
         const result = selectFieldTypesBuilder.build(selector);

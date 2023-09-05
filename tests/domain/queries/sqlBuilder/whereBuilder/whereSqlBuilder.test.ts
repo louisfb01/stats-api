@@ -1,4 +1,5 @@
 import FieldInfo from "../../../../../src/models/fieldInfo";
+import { ConditionOperator } from "../../../../../src/models/request/conditionOperator";
 import Filter from "../../../../../src/models/request/filter";
 import whereSqlBuilderObjectMother from "../../../../utils/objectMothers/domain/queries/sqlBuilder/whereBuilder/whereSqlBuilderObjectMother";
 import fieldInfoObjectMother from "../../../../utils/objectMothers/models/fieldInfoObjectMother";
@@ -13,7 +14,7 @@ describe('whereSqlBuilder tests', () => {
     const femaleGenderFilter = filterObjectMother.get('gender', 'is', 'female', 'string');
     const stringFieldInfo = fieldInfoObjectMother.get('string');
 
-    const patientSelector = selectorObjectMother.get('Patient', 'patient', [genderField, addressCityField], [femaleGenderFilter]);
+    const patientSelector = selectorObjectMother.get('Patient', 'patient', [genderField, addressCityField], {conditionOperator:ConditionOperator.and, conditions:[femaleGenderFilter]});
 
     it('initialy has WHERE command', () => {
         // ARRANGE
@@ -53,7 +54,7 @@ describe('whereSqlBuilder tests', () => {
             .build(patientSelector, filterTypes);
 
         // ASSERT
-        expect(sqlQuery).toEqual("WHERE (resource->>'gender')::string = 'female' AND resource->>'birthDate' != 'null'");
+        expect(sqlQuery).toEqual("WHERE resource->>'birthDate' != 'null' AND (resource->>'gender')::string = 'female'");
     })
 
     it('can add subqueryFilter to WHERE', () => {

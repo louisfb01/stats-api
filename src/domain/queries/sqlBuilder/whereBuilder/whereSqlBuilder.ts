@@ -6,7 +6,7 @@ import GroupBySqlBuilder from "../groupByBuilder/groupBySqlBuilder";
 import SqlBuilder from "../sqlBuilder";
 import whereBuilder from "./whereBuilder";
 import whereFieldFilterBuilder from "./whereFieldFilterBuilder";
-// import whereSubqueryFilterBuilder from "./whereSubqueryFilterBuilder";
+import whereSubqueryFilterBuilder from "./whereSubqueryFilterBuilder";
 
 export default class WhereSqlBuilder {
     sqlBuilder: SqlBuilder;
@@ -25,14 +25,14 @@ export default class WhereSqlBuilder {
         return this;
     }
 
-    // subqueryFilter(subqueryName: string) {
-    //     const builderFunction = (selector: Selector, filterFields: Map<Filter, FieldInfo>) => {
-    //         return whereSubqueryFilterBuilder.build(selector, filterFields, subqueryName);
-    //     }
+    subqueryFilter(subqueryName: string) {
+        const builderFunction = (selector: Selector, filterFields: Map<Filter, FieldInfo>) => {
+            return whereSubqueryFilterBuilder.build(selector, filterFields, subqueryName);
+        }
 
-    //     this.sqlBuilder.requestBuilders.push(builderFunction);
-    //     return this;
-    // }
+        this.sqlBuilder.requestBuilders.push(builderFunction);
+        return this;
+    }
 
     groupBy() {
         const groupByBuilder = new GroupBySqlBuilder(this.sqlBuilder);

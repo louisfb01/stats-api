@@ -8,6 +8,7 @@ import filterObjectMother from "../../../../utils/objectMothers/models/filterObj
 import selectorObjectMother from "../../../../utils/objectMothers/models/selectorObjectMother";
 import resourceArrayFields from "../../../../../src/domain/resourceArrayFields";
 import Field from "../../../../../src/models/request/field";
+import { ConditionOperator } from "../../../../../src/models/request/conditionOperator";
 
 describe('groupCountQuery tests', () => {
     const genderField = fieldObjectMother.get('gender', 'gender', 'string');
@@ -24,7 +25,7 @@ describe('groupCountQuery tests', () => {
 
     it('With field and no filter, groups by field', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [genderField], []);
+        const selector = selectorObjectMother.get('Patient', 'patient', [genderField], {conditionOperator:ConditionOperator.and, conditions:[]});
 
         // ACT
         const query = groupCountQuery.getQuery(selector, genderField, filterMaps, fieldMaps);
@@ -46,7 +47,7 @@ describe('groupCountQuery tests', () => {
 
     it('With field and filter, groups by field with WHERE filter', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [genderField], [femaleGenderFilter]);
+        const selector = selectorObjectMother.get('Patient', 'patient', [genderField], {conditionOperator:ConditionOperator.and, conditions:[femaleGenderFilter]});
 
         // ACT
         const query = groupCountQuery.getQuery(selector, genderField, filterMaps, fieldMaps);

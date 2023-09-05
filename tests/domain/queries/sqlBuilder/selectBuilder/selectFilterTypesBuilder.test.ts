@@ -1,4 +1,5 @@
 import selectFilterTypesBuilder from "../../../../../src/domain/queries/sqlBuilder/selectBuilder/selectFilterTypesBuilder";
+import { ConditionOperator } from "../../../../../src/models/request/conditionOperator";
 import filterObjectMother from "../../../../utils/objectMothers/models/filterObjectMother";
 import selectorObjectMother from "../../../../utils/objectMothers/models/selectorObjectMother";
 
@@ -8,7 +9,7 @@ describe('selectFilterTypeBuilder tests', () => {
         const genderFieldFilter = filterObjectMother.get('gender', 'is', 'female', 'string');
         const ageField = filterObjectMother.get('age', 'is', '27', 'integer');
 
-        const selector = selectorObjectMother.get('Patient', 'patient', [], [genderFieldFilter, ageField])
+        const selector = selectorObjectMother.get('Patient', 'patient', [], {conditionOperator:ConditionOperator.and, conditions:[genderFieldFilter, ageField]})
 
         // ACT
         const result = selectFilterTypesBuilder.build(selector);

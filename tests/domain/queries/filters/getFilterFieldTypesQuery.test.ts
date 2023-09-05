@@ -1,5 +1,6 @@
 import getFilterFieldTypesQuery from "../../../../src/domain/queries/filters/getFilterFieldTypesQuery";
 import FieldInfo from "../../../../src/models/fieldInfo";
+import { ConditionOperator } from "../../../../src/models/request/conditionOperator";
 import Filter from "../../../../src/models/request/filter";
 import sqlBuilderObjectMother from "../../../utils/objectMothers/domain/queries/sqlBuilderObjectMother";
 import filterObjectMother from "../../../utils/objectMothers/models/filterObjectMother";
@@ -13,7 +14,7 @@ describe('getFilterFieldTypesQuery tests', () => {
 
     it('gets query with field queries and resource from', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [], [filterA, filterB]);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], {conditionOperator:ConditionOperator.and, conditions:[filterA, filterB]});
 
         // ACT
         const query = getFilterFieldTypesQuery.getQuery(selector);
@@ -30,7 +31,7 @@ describe('getFilterFieldTypesQuery tests', () => {
 
     it('escapes resource to avoid sql injections', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get("Patient'--drop", 'patient', [], [filterA, filterB]);
+        const selector = selectorObjectMother.get("Patient'--drop", 'patient', [], {conditionOperator:ConditionOperator.and, conditions:[filterA, filterB]});
 
         // ACT
         const query = getFilterFieldTypesQuery.getQuery(selector);

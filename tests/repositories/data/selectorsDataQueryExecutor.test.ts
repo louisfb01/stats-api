@@ -15,6 +15,7 @@ import measuresObjectMother from "../../utils/objectMothers/models/request/measu
 import selectorObjectMother from "../../utils/objectMothers/models/selectorObjectMother";
 import aidboxFieldResponseObjectMother from "../../utils/objectMothers/models/fieldInfoObjectMother";
 import fieldsMeasureDataQueryExecutor from "../../../src/repositories/data/fieldsMeasureDataQueryExecutor";
+import { ConditionOperator } from "../../../src/models/request/conditionOperator";
 
 describe('selectorsDataQueryExecutor tests', () => {
     const measures = measuresObjectMother.getAllOptionMeasures();
@@ -41,7 +42,7 @@ describe('selectorsDataQueryExecutor tests', () => {
 
     it('gets the total count for resource', async () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [], []);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], {conditionOperator:ConditionOperator.and, conditions:[]});
 
         when(countResourceQuery.getQuery as any)
             .calledWith(selector, filterMaps, fieldMaps)
@@ -64,7 +65,7 @@ describe('selectorsDataQueryExecutor tests', () => {
     it('with breakdown, gets the breakdown for resource', async () => {
         // ARRANGE
         const breakdown = breakdownObjectMother.get('Patient', 'deceasedTime', 60, 'dateTime');
-        const selector = selectorObjectMother.get('Patient', 'patient', [birthdateField], [], undefined);
+        const selector = selectorObjectMother.get('Patient', 'patient', [birthdateField], {conditionOperator:ConditionOperator.and, conditions:[]}, undefined);
         const fieldsMap = getFieldsMap([birthdateField], [dateTimeFieldType]);
 
         when(countResourceQuery.getQuery as any)
@@ -97,7 +98,7 @@ describe('selectorsDataQueryExecutor tests', () => {
     it('with breakdown, breakdown has its own query, gets the breakdown from query', async () => {
         // ARRANGE
         const breakdown = breakdownObjectMother.get('Patient', 'deceasedTime', 60, 'dateTime', breakdownQuery);
-        const selector = selectorObjectMother.get('Patient', 'patient', [], [], undefined);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], {conditionOperator:ConditionOperator.and, conditions:[]}, undefined);
 
         when(countResourceQuery.getQuery as any)
             .calledWith(selector, filterMaps, fieldMaps)

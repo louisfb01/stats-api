@@ -4,6 +4,7 @@ import timeBreakdownCalculator from "../../../src/domain/calculation/breakdown/t
 import fieldReponseProcessor from "../../../src/domain/calculation/fieldReponseProcessor";
 import summarizeReponseProcessor from "../../../src/domain/calculation/summarizeReponseProcessor";
 import FieldInfo from "../../../src/models/fieldInfo";
+import { ConditionOperator } from "../../../src/models/request/conditionOperator";
 import Field from "../../../src/models/request/field";
 import queryDataResultsObjectMother from "../../utils/objectMothers/domain/queryDataResultsObjectMother";
 import fieldObjectMother from "../../utils/objectMothers/models/fieldObjectMother"
@@ -25,7 +26,7 @@ describe('summarizeReponseProcessor tests', () => {
 
     it('when aidbox response is error, indicates error', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patiend', 'patient', [], []);
+        const selector = selectorObjectMother.get('Patiend', 'patient', [], {conditionOperator:ConditionOperator.and, conditions:[]});
 
         const queryDataResults = queryDataResultsObjectMother.get();
         queryDataResults.addSelectorResult(selector, { query: 'SELECT * FROM Patient', result: new Error('error') });
@@ -39,7 +40,7 @@ describe('summarizeReponseProcessor tests', () => {
 
     it('gets aidbox total and queryUri for summarize response', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [], []);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], {conditionOperator:ConditionOperator.and, conditions:[]});
 
         const queryDataResults = queryDataResultsObjectMother.get();
         queryDataResults.addSelectorResult(selector, { query: 'SELECT * FROM Patient', result: { count: 999 } });
@@ -54,7 +55,7 @@ describe('summarizeReponseProcessor tests', () => {
 
     it('gets field responses from selector fields', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patiend', 'patient', [fieldA, fieldB], []);
+        const selector = selectorObjectMother.get('Patiend', 'patient', [fieldA, fieldB], {conditionOperator:ConditionOperator.and, conditions:[]});
 
         const queryDataResults = queryDataResultsObjectMother.get();
         queryDataResults.addSelectorResult(selector, { query: 'SELECT * FROM Patient', result: { count: 999 } });
@@ -79,7 +80,7 @@ describe('summarizeReponseProcessor tests', () => {
     it('gets aidbox breakdown and queryUri for summarize response', () => {
         // ARRANGE
         const breakdown = breakdownObjectMother.get('Patient', 'gender', 60, 'string');
-        const selector = selectorObjectMother.get('Patient', 'patient', [], [], undefined);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], {conditionOperator:ConditionOperator.and, conditions:[]}, undefined);
 
         const queryDataResults = queryDataResultsObjectMother.get();
         queryDataResults.addSelectorResult(selector, { query: 'SELECT * FROM Patient', result: { count: 999 } });

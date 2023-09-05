@@ -1,19 +1,20 @@
 import fromJoinBuilder from "../../../../../../src/domain/queries/sqlBuilder/fromBuilder/join/fromPossibleJoinBuilder";
 import environnementProvider from "../../../../../../src/infrastructure/environnementProvider";
 import FieldInfo from "../../../../../../src/models/fieldInfo";
+import { ConditionOperator } from "../../../../../../src/models/request/conditionOperator";
 import Field from "../../../../../../src/models/request/field";
 import Filter from "../../../../../../src/models/request/filter";
 import selectorObjectMother from "../../../../../utils/objectMothers/models/selectorObjectMother"
 
 describe('fromPossibleJoinBuilder tests', () => {
-    const patientJoinSelector = selectorObjectMother.get('Patient', 'patient', [], []);
-    const observationJoinSelector = selectorObjectMother.get('Observation', 'observation', [], []);
+    const patientJoinSelector = selectorObjectMother.get('Patient', 'patient', [], {conditionOperator:ConditionOperator.and, conditions:[]});
+    const observationJoinSelector = selectorObjectMother.get('Observation', 'observation', [], {conditionOperator:ConditionOperator.and, conditions:[]});
 
 
 
     it('with no join selector, returns empty query', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Observation', 'patient', [], []);
+        const selector = selectorObjectMother.get('Observation', 'patient', [], {conditionOperator:ConditionOperator.and, conditions:[]});
         const filterMap = new Map<Filter, FieldInfo>();
         const fieldMap = new Map<Field, FieldInfo>();
 
@@ -33,7 +34,7 @@ describe('fromPossibleJoinBuilder tests', () => {
 
     it('add join statement from joinSelector to selector, join patient to observation', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Observation', 'observation', [], [], patientJoinSelector);
+        const selector = selectorObjectMother.get('Observation', 'observation', [], {conditionOperator:ConditionOperator.and, conditions:[]}, patientJoinSelector);
         const filterMap = new Map<Filter, FieldInfo>();
         const fieldMap = new Map<Field, FieldInfo>();
 
@@ -47,7 +48,7 @@ describe('fromPossibleJoinBuilder tests', () => {
 
     it('add join statement from joinSelector to selector, join observation to patient', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [], [], observationJoinSelector);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], {conditionOperator:ConditionOperator.and, conditions:[]}, observationJoinSelector);
         const filterMap = new Map<Filter, FieldInfo>();
         const fieldMap = new Map<Field, FieldInfo>();
 

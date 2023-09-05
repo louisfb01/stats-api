@@ -1,4 +1,5 @@
 import FieldInfo from "../../../../src/models/fieldInfo";
+import { ConditionOperator } from "../../../../src/models/request/conditionOperator";
 import Filter from "../../../../src/models/request/filter";
 import sqlBuilderObjectMother from "../../../utils/objectMothers/domain/queries/sqlBuilderObjectMother";
 import fieldInfoObjectMother from "../../../utils/objectMothers/models/fieldInfoObjectMother";
@@ -13,7 +14,7 @@ describe('sqlBuilder tests', () => {
     const femaleGenderFilter = filterObjectMother.get('gender', 'is', 'female', 'string');
     const stringFieldInfo = fieldInfoObjectMother.get('string');
 
-    const patientSelector = selectorObjectMother.get('Patient', 'patient', [genderField, addressCityField], [femaleGenderFilter]);
+    const patientSelector = selectorObjectMother.get('Patient', 'patient', [genderField, addressCityField], {conditionOperator:ConditionOperator.and, conditions:[femaleGenderFilter]});
 
     describe('build tests', () => {
         it('with count * select and resource from, corresponding sql is built', () => {

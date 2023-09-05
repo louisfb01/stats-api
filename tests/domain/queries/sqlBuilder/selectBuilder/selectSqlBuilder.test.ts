@@ -1,4 +1,5 @@
 import FieldInfo from "../../../../../src/models/fieldInfo";
+import { ConditionOperator } from "../../../../../src/models/request/conditionOperator";
 import Field from "../../../../../src/models/request/field";
 import Filter from "../../../../../src/models/request/filter";
 import selectBuilderObjectMother from "../../../../utils/objectMothers/domain/queries/sqlBuilder/selectBuilder/selectSqlBuilderObjectMother";
@@ -13,8 +14,8 @@ describe('SelectSqlBuilder tests', () => {
 
     const femaleGenderFilter = filterObjectMother.get('gender', 'is', 'female', 'string');
 
-    const patientSelector = selectorObjectMother.get('Patient', 'patient', [genderField, addressCityField], [femaleGenderFilter]);
-    const observationSelector = selectorObjectMother.get('Observation', 'observation', [genderField, addressCityField], [femaleGenderFilter]);
+    const patientSelector = selectorObjectMother.get('Patient', 'patient', [genderField, addressCityField], {conditionOperator:ConditionOperator.and, conditions:[femaleGenderFilter]});
+    const observationSelector = selectorObjectMother.get('Observation', 'observation', [genderField, addressCityField], {conditionOperator:ConditionOperator.and, conditions:[femaleGenderFilter]});
 
     it('initialy has SELECT command', () => {
         // ARRANGE
@@ -62,7 +63,7 @@ describe('SelectSqlBuilder tests', () => {
         const selectSqlBuilder = selectBuilderObjectMother.get();
         const field = fieldObjectMother.get('gender', 'gender', 'string');
 
-        const selector = selectorObjectMother.get('Patient', 'patient', [field], []);
+        const selector = selectorObjectMother.get('Patient', 'patient', [field], {conditionOperator:ConditionOperator.and, conditions:[]});
 
         // ACT
         const sqlQuery = selectSqlBuilder
@@ -79,7 +80,7 @@ describe('SelectSqlBuilder tests', () => {
         const selectSqlBuilder = selectBuilderObjectMother.get();
         const filter = filterObjectMother.get('gender', 'is', 'male', 'string');
 
-        const selector = selectorObjectMother.get('Patient', 'patient', [], [filter]);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], {conditionOperator:ConditionOperator.and, conditions:[filter]});
 
         // ACT
         const sqlQuery = selectSqlBuilder
@@ -282,7 +283,7 @@ describe('SelectSqlBuilder tests', () => {
         const selectSqlBuilder = selectBuilderObjectMother.get();
 
         const breakdown = breakdownObjectMother.get('Observation', 'issued', 1209600, 'dateTime');
-        const selector = selectorObjectMother.get('Observation', 'observation', [], [], undefined);
+        const selector = selectorObjectMother.get('Observation', 'observation', [], {conditionOperator:ConditionOperator.and, conditions:[]}, undefined);
 
         const queryPattern = (fieldCompiled: string, step: number) => {
             return `SELECT to_timestamp(floor((extract('epoch' from (${fieldCompiled})::timestamp) / ${step} )) * ${step}) AS period_start`

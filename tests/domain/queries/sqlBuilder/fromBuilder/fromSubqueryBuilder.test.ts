@@ -7,6 +7,7 @@ import Field from "../../../../../src/models/request/field";
 import FieldInfo from "../../../../../src/models/fieldInfo";
 import fieldInfoObjectMother from "../../../../utils/objectMothers/models/fieldInfoObjectMother";
 import Filter from "../../../../../src/models/request/filter";
+import { ConditionOperator } from "../../../../../src/models/request/conditionOperator";
 
 describe('fromSubqueryBuilder tests', () => {
     const genderField = fieldObjectMother.get('gender', 'gender', 'string');
@@ -30,7 +31,7 @@ describe('fromSubqueryBuilder tests', () => {
 
     it('with field, no filter, no array field is selected with good nomenclature', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [genderField], []);
+        const selector = selectorObjectMother.get('Patient', 'patient', [genderField], {conditionOperator:ConditionOperator.and, conditions:[]});
         const genderFieldMap = getFieldsMap([genderField], [stringFieldInfo]);
         const filtersMap = getFiltersMap([], []);
 
@@ -43,7 +44,7 @@ describe('fromSubqueryBuilder tests', () => {
 
     it('with array field, no filter, field is unrolled and selected with good nomenclature', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [cityAddressField], []);
+        const selector = selectorObjectMother.get('Patient', 'patient', [cityAddressField], {conditionOperator:ConditionOperator.and, conditions:[]});
         resourceArrayFields.values = ['address'];
         const cityFieldMap = getFieldsMap([cityAddressField], [stringFieldInfo]);
         const filtersMap = getFiltersMap([], []);
@@ -57,7 +58,7 @@ describe('fromSubqueryBuilder tests', () => {
 
     it('with array field and filter, field and filter are unrolled and selected with good nomenclature', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [genderField], [quebecCityFilter]);
+        const selector = selectorObjectMother.get('Patient', 'patient', [genderField], {conditionOperator:ConditionOperator.and, conditions:[quebecCityFilter]});
         resourceArrayFields.values = ['address'];
         const genderFieldMap = getFieldsMap([genderField], [stringFieldInfo]);
         const filtersMap = getFiltersMap([quebecCityFilter], [stringFieldInfo]);
@@ -71,7 +72,7 @@ describe('fromSubqueryBuilder tests', () => {
 
     it('with field and two filters, field and filters are selected with good nomenclature', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [genderField], [fieldAFilter, fieldBFilter]);
+        const selector = selectorObjectMother.get('Patient', 'patient', [genderField], {conditionOperator:ConditionOperator.and, conditions:[fieldAFilter, fieldBFilter]});
         const filtersMap = getFiltersMap([fieldAFilter, fieldBFilter], [stringFieldInfo, stringFieldInfo]);
         const genderFieldMap = getFieldsMap([genderField], [stringFieldInfo]);
 
@@ -84,7 +85,7 @@ describe('fromSubqueryBuilder tests', () => {
 
     it('with field and filter, both same field, field is only once in subquery', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [genderField], [maleGenderFilter]);
+        const selector = selectorObjectMother.get('Patient', 'patient', [genderField], {conditionOperator:ConditionOperator.and, conditions:[maleGenderFilter]});
         const genderFieldMap = getFieldsMap([genderField], [stringFieldInfo]);
         const filtersMap = getFiltersMap([maleGenderFilter], [stringFieldInfo]);
 
@@ -97,7 +98,7 @@ describe('fromSubqueryBuilder tests', () => {
 
     it('with city field, two filters same field, filter field is only included once', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [cityAddressField], [maleGenderFilter, femaleGenderFilter]);
+        const selector = selectorObjectMother.get('Patient', 'patient', [cityAddressField], {conditionOperator:ConditionOperator.and, conditions:[maleGenderFilter, femaleGenderFilter]});
         const cityFieldMap = getFieldsMap([cityAddressField], [stringFieldInfo]);
         const filtersMap = getFiltersMap([maleGenderFilter, femaleGenderFilter], [stringFieldInfo, stringFieldInfo]);
 

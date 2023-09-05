@@ -14,10 +14,11 @@ import FieldInfo from "../../../src/models/fieldInfo";
 import Filter from "../../../src/models/request/filter";
 import Measures from "../../../src/models/request/measures"
 import constants from "../../../src/constants"
+import { ConditionOperator } from "../../../src/models/request/conditionOperator";
 
 describe('fieldsMeasureDataQueryExecutor tests', () => {
     const field = fieldObjectMother.get('field', 'label', 'type');
-    const selector = selectorObjectMother.get('Patient', 'patient', [field], []);
+    const selector = selectorObjectMother.get('Patient', 'patient', [field], {conditionOperator:ConditionOperator.and, conditions:[]});
 
     const sqlQuery = "SELECT * FROM Patient";
     const result = { result: 'value' };
@@ -57,8 +58,8 @@ describe('fieldsMeasureDataQueryExecutor tests', () => {
                 .mockReturnValue(tp.result);
 
             // ACT
-            await fieldsMeasureDataQueryExecutor.executeQuery(queryDataResults, selector, field, measures, fieldsMap,
-                filterMaps)
+            await fieldsMeasureDataQueryExecutor.executeQuery(queryDataResults, field, measures, fieldsMap,
+                filterMaps, selector)
 
             // ASSERT
             const gottenResult = isContinousMeasure ?

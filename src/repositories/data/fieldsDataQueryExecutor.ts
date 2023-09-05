@@ -16,7 +16,7 @@ async function executeQueries(queryDataResults: QueryDataResults,
 
     const fieldType = fieldTypes.get(field);
     if (!fieldType) throw new Error('No associated field type.');
-    await fieldsMeasureDataQueryExecutor.executeQuery(queryDataResults, selector, field, measures, fieldTypes, filterFieldTypes);
+    await fieldsMeasureDataQueryExecutor.executeQuery(queryDataResults, field, measures, fieldTypes, filterFieldTypes, selector);
 }
 
 export default {

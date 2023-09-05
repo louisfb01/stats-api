@@ -1,6 +1,7 @@
 import QueryDataResults from "../../../src/domain/queries/queryDataResults";
 import CategoricalMesure from "../../../src/models/categoricalMeasure";
 import ContinuousMesure from "../../../src/models/continuousMeasure"
+import { ConditionOperator } from "../../../src/models/request/conditionOperator";
 import queryDataResultsObjectMother from "../../utils/objectMothers/domain/queryDataResultsObjectMother";
 import fieldObjectMother from "../../utils/objectMothers/models/fieldObjectMother";
 import selectorObjectMother from "../../utils/objectMothers/models/selectorObjectMother";
@@ -15,8 +16,8 @@ describe('queryDataResults tests', () => {
     const fieldA = fieldObjectMother.get('fieldA', 'label', 'string');
     const fieldB = fieldObjectMother.get('fieldB', 'label', 'string');
 
-    const selectorA = selectorObjectMother.get('Patient', 'patient', [], []);
-    const selectorB = selectorObjectMother.get('Observation', 'observation', [], []);
+    const selectorA = selectorObjectMother.get('Patient', 'patient', [], {conditionOperator:ConditionOperator.and, conditions:[]});
+    const selectorB = selectorObjectMother.get('Observation', 'observation', [], {conditionOperator:ConditionOperator.and, conditions:[]});
 
     const resultA = { query: 'SELECT * FROM Patient', result: 'A' };
     const resultB = { query: 'SELECT * FROM Observation', result: 'B' };
@@ -143,7 +144,7 @@ describe('queryDataResults tests', () => {
             const results = queryDataResults.getFieldResults(selectorA, fieldA);
 
             // ASSERT
-            expect(results.length).toEqual(2);
+            expect(results).toHaveLength(2);
             expect(results[0]).toBe(resultA);
             expect(results[1]).toBe(resultB);
         })

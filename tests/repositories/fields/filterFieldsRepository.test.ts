@@ -2,6 +2,7 @@ import { when } from "jest-when";
 import getFilterFieldTypesQuery from "../../../src/domain/queries/filters/getFilterFieldTypesQuery";
 import aidboxProxy from "../../../src/infrastructure/aidbox/aidboxProxy";
 import FieldInfo from "../../../src/models/fieldInfo";
+import { ConditionOperator } from "../../../src/models/request/conditionOperator";
 import Filter from "../../../src/models/request/filter";
 import Selector from "../../../src/models/request/selector";
 import filterFieldsRepository from "../../../src/repositories/fields/filterFieldsRepository";
@@ -14,7 +15,7 @@ describe('filterFieldsRepository tests', () => {
     const filterB = filterObjectMother.get('fieldB', 'is', 'value');
     const filterC = filterObjectMother.get('field.path.subPathC', 'is', 'value');
 
-    const patientSelector = selectorObjectMother.get('Patient', 'patient', [], [filterA, filterB]);
+    const patientSelector = selectorObjectMother.get('Patient', 'patient', [], {conditionOperator:ConditionOperator.and, conditions:[filterA, filterB]});
     const observationSelector = selectorObjectMother.get('Observation', 'observation', [], [filterC]);
 
     const patientFieldsQuery = 'SELECT * FROM Patient';
@@ -108,7 +109,7 @@ describe('filterFieldsRepository tests', () => {
 
     it('with one selector, selector is join with two fields, responses are returned by field.', async () => {
         // ARRANGE
-        const topSelector = selectorObjectMother.get('Observation', 'observation', [], [], patientSelector);
+        const topSelector = selectorObjectMother.get('Observation', 'observation', [], {conditionOperator:ConditionOperator.and, conditions:[]}, patientSelector);
         const summarizeRequest = summarizeRequestBodyObjectMother.get([topSelector]);
 
         when(getFilterFieldTypesQuery.getQuery as any)

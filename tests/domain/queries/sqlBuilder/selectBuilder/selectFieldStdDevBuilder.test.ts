@@ -1,6 +1,7 @@
 import selectFieldStddevBuilder from "../../../../../src/domain/queries/sqlBuilder/selectBuilder/selectFieldStdDevBuilder";
 import resourceArrayFields from "../../../../../src/domain/resourceArrayFields";
 import FieldInfo from "../../../../../src/models/fieldInfo";
+import { ConditionOperator } from "../../../../../src/models/request/conditionOperator";
 import Field from "../../../../../src/models/request/field";
 import fieldObjectMother from "../../../../utils/objectMothers/models/fieldObjectMother";
 import selectorObjectMother from "../../../../utils/objectMothers/models/selectorObjectMother";
@@ -14,7 +15,7 @@ describe('selectFieldStdDevBuilder tests', () => {
         // ARRANGE
         const field = fieldObjectMother.get('address.country.name', 'country', 'string');
         const fieldTypes = new Map<Field, FieldInfo>();
-        const patientSelector = selectorObjectMother.get('Patient', 'patient', [field], []);
+        const patientSelector = selectorObjectMother.get('Patient', 'patient', [field], {conditionOperator:ConditionOperator.and, conditions:[]});
 
         // ACT
         const result = selectFieldStddevBuilder.build(field, fieldTypes, patientSelector);
@@ -27,7 +28,7 @@ describe('selectFieldStdDevBuilder tests', () => {
         // ARRANGE
         const field = fieldObjectMother.get('address.country.name', 'country', 'string');
         const fieldTypes = new Map<Field, FieldInfo>();
-        const patientSelector = selectorObjectMother.get('Patient', 'patient', [field], []);
+        const patientSelector = selectorObjectMother.get('Patient', 'patient', [field], {conditionOperator:ConditionOperator.and, conditions:[]});
 
         resourceArrayFields.values = ['address.country'];
 
@@ -42,7 +43,7 @@ describe('selectFieldStdDevBuilder tests', () => {
         // ARRANGE
         const field = fieldObjectMother.get('age', 'age', 'integer');
         const fieldTypes = new Map<Field, FieldInfo>();
-        const patientSelector = selectorObjectMother.get('Patient', 'patient', [field], []);
+        const patientSelector = selectorObjectMother.get('Patient', 'patient', [field], {conditionOperator:ConditionOperator.and, conditions:[]});
 
         // ACT
         const result = selectFieldStddevBuilder.build(field, fieldTypes, patientSelector);

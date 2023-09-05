@@ -1,6 +1,7 @@
 import joinInnerQueryBuilder from "../../../../../../src/domain/queries/sqlBuilder/fromBuilder/join/joinInnerQueryBuilder";
 import resourceArrayFields from "../../../../../../src/domain/resourceArrayFields";
 import FieldInfo from "../../../../../../src/models/fieldInfo";
+import { ConditionOperator } from "../../../../../../src/models/request/conditionOperator";
 import Field from "../../../../../../src/models/request/field";
 import Filter from "../../../../../../src/models/request/filter";
 import sqlBuilderObjectMother from "../../../../../utils/objectMothers/domain/queries/sqlBuilderObjectMother";
@@ -9,7 +10,7 @@ import filterObjectMother from "../../../../../utils/objectMothers/models/filter
 import selectorObjectMother from "../../../../../utils/objectMothers/models/selectorObjectMother";
 
 describe('joinInnerBuilder tests', () => {
-    const parentSelector = selectorObjectMother.get('Observation', 'observation', [], []);
+    const parentSelector = selectorObjectMother.get('Observation', 'observation', [], {conditionOperator:ConditionOperator.and, conditions:[]});
     const femaleGenderFilter = filterObjectMother.get('gender', 'is', 'female', 'string');
     const stringFieldInfo = fieldInfoObjectMother.get('string');
 
@@ -19,7 +20,7 @@ describe('joinInnerBuilder tests', () => {
 
     it('gets query with resource from', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [], []);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], {conditionOperator:ConditionOperator.and, conditions:[]});
         parentSelector.joins = selector;
 
         // ACT
@@ -37,8 +38,8 @@ describe('joinInnerBuilder tests', () => {
 
     it('gets query with resource from with inner join', () => {
         // ARRANGE
-        const joinSelector = selectorObjectMother.get('Observation', 'observation', [], []);
-        const selector = selectorObjectMother.get('Patient', 'patient', [], [], joinSelector);
+        const joinSelector = selectorObjectMother.get('Observation', 'observation', [], {conditionOperator:ConditionOperator.and, conditions:[]});
+        const selector = selectorObjectMother.get('Patient', 'patient', [], {conditionOperator:ConditionOperator.and, conditions:[]}, joinSelector);
 
         // ACT
         const query = joinInnerQueryBuilder.build(selector, filterMaps, fieldMaps);
@@ -55,7 +56,7 @@ describe('joinInnerBuilder tests', () => {
 
     it('gets query with filters applied', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [], [femaleGenderFilter]);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], {conditionOperator:ConditionOperator.and, conditions:[femaleGenderFilter]});
         parentSelector.joins = selector;
 
         // ACT
@@ -73,7 +74,7 @@ describe('joinInnerBuilder tests', () => {
 
     it('escapes resource to avoid sql injections', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get("Patient'--drop", 'patient', [], []);
+        const selector = selectorObjectMother.get("Patient'--drop", 'patient', [], {conditionOperator:ConditionOperator.and, conditions:[]});
 
         // ACT
         const query = joinInnerQueryBuilder.build(selector, filterMaps, fieldMaps);
@@ -84,7 +85,7 @@ describe('joinInnerBuilder tests', () => {
 
     it('gets query with cross join and filters applied when one field is array type', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [], [femaleGenderFilter]);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], {conditionOperator:ConditionOperator.and, conditions:[femaleGenderFilter]});
         parentSelector.joins = selector;
 
         resourceArrayFields.values = ['gender'];

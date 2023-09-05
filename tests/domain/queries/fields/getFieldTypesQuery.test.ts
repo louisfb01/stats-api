@@ -1,6 +1,7 @@
 import { when } from "jest-when";
 import getFieldTypesQuery from "../../../../src/domain/queries/fields/getFieldTypesQuery";
 import FieldInfo from "../../../../src/models/fieldInfo";
+import { ConditionOperator } from "../../../../src/models/request/conditionOperator";
 import Filter from "../../../../src/models/request/filter";
 import sqlBuilderObjectMother from "../../../utils/objectMothers/domain/queries/sqlBuilderObjectMother";
 import fieldObjectMother from "../../../utils/objectMothers/models/fieldObjectMother";
@@ -14,7 +15,7 @@ describe('getFieldTypesQuery tests', () => {
 
     it('gets field types from selector resource', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [fieldA, fieldB], []);
+        const selector = selectorObjectMother.get('Patient', 'patient', [fieldA, fieldB], {conditionOperator:ConditionOperator.and, conditions:[]});
 
         // ACT
         const query = getFieldTypesQuery.getQuery(selector, filterTypes);
@@ -32,7 +33,7 @@ describe('getFieldTypesQuery tests', () => {
 
     it('escapes resource to avoid sql injections', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get("Patient'--drop", 'patient', [fieldA, fieldB], []);
+        const selector = selectorObjectMother.get("Patient'--drop", 'patient', [fieldA, fieldB], {conditionOperator:ConditionOperator.and, conditions:[]});
 
         // ACT
         const query = getFieldTypesQuery.getQuery(selector, filterTypes);

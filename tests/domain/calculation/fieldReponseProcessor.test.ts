@@ -3,6 +3,7 @@ import fieldMetricCalculatorsFactory from "../../../src/domain/calculation/field
 import fieldReponseProcessor from "../../../src/domain/calculation/fieldReponseProcessor";
 import ContinuousMesure from "../../../src/models/continuousMeasure";
 import FieldInfo from "../../../src/models/fieldInfo";
+import { ConditionOperator } from "../../../src/models/request/conditionOperator";
 import Field from "../../../src/models/request/field";
 import fieldMetricCalculatorObjectMother from "../../utils/objectMothers/domain/calculation/fieldMetricCalculatorObjectMother";
 import queryDataResultsObjectMother from "../../utils/objectMothers/domain/queryDataResultsObjectMother";
@@ -19,7 +20,7 @@ describe('fieldReponseProcessor tests', () => {
         // ARRANGE
         const field = fieldObjectMother.get('field', 'field', 'string');
         const fieldsMap = getFieldsMap([field], [tokenField]);
-        const selector = selectorObjectMother.get('Patient', 'patient', [field], []);
+        const selector = selectorObjectMother.get('Patient', 'patient', [field], {conditionOperator:ConditionOperator.and, conditions:[]});
 
         const measures = measuresObjectMother.get();
         const queryDataResults = queryDataResultsObjectMother.get();

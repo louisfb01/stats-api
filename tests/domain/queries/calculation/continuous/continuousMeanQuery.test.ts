@@ -10,6 +10,7 @@ import continuousQuery from "../../../../../src/domain/queries/calculation/conti
 import Field from "../../../../../src/models/request/field";
 import ContinuousMesure from "../../../../../src/models/continuousMeasure";
 import Measures from "../../../../../src/models/request/measures";
+import { ConditionOperator } from "../../../../../src/models/request/conditionOperator";
 
 describe('continuousMeanQuery tests', () => {
     const ageField = fieldObjectMother.get('age', 'age', 'integer');
@@ -32,7 +33,7 @@ describe('continuousMeanQuery tests', () => {
 
     it('With field and no filter, groups by field', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [genderField], []);
+        const selector = selectorObjectMother.get('Patient', 'patient', [genderField], {conditionOperator:ConditionOperator.and, conditions:[]});
         const fieldTypes = new Map<Field, FieldInfo>();
 
         // ACT
@@ -53,7 +54,7 @@ describe('continuousMeanQuery tests', () => {
 
     it('With age computed field and no filter, groups by field with WHERE filter', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [ageField], []);
+        const selector = selectorObjectMother.get('Patient', 'patient', [ageField], {conditionOperator:ConditionOperator.and, conditions:[]});
         const fieldTypes = new Map<Field, FieldInfo>();
 
         // ACT
@@ -76,7 +77,7 @@ describe('continuousMeanQuery tests', () => {
 
     it('With field and filter, groups by field with WHERE filter', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [genderField], [femaleGenderFilter]);
+        const selector = selectorObjectMother.get('Patient', 'patient', [genderField], {conditionOperator:ConditionOperator.and, conditions:[femaleGenderFilter]});
         const fieldTypes = new Map<Field, FieldInfo>();
 
         // ACT

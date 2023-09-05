@@ -1,12 +1,13 @@
 import continuousStandardDeviationCalculator from "../../../../src/domain/calculation/continuous/continuousStandardDeviationCalculator";
 import CategoricalMesure from "../../../../src/models/categoricalMeasure";
+import { ConditionOperator } from "../../../../src/models/request/conditionOperator";
 import queryDataResultsObjectMother from "../../../utils/objectMothers/domain/queryDataResultsObjectMother";
 import fieldObjectMother from "../../../utils/objectMothers/models/fieldObjectMother"
 import selectorObjectMother from "../../../utils/objectMothers/models/selectorObjectMother";
 
 describe('continuousStandardDeviationCalculator tests', () => {
     const field = fieldObjectMother.get('gender', 'gender', 'string');
-    const selector = selectorObjectMother.get('Patient', 'patient', [field], []);
+    const selector = selectorObjectMother.get('Patient', 'patient', [field], {conditionOperator:ConditionOperator.and, conditions:[]});
     const measure = CategoricalMesure.count;
 
     it('with sum in query, sum is returned.', () => {

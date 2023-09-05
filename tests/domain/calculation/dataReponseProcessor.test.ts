@@ -2,6 +2,7 @@ import { when } from "jest-when";
 import aidboxReponseProcessor from "../../../src/domain/calculation/dataReponseProcessor";
 import summarizeReponseProcessor from "../../../src/domain/calculation/summarizeReponseProcessor";
 import FieldInfo from "../../../src/models/fieldInfo";
+import { ConditionOperator } from "../../../src/models/request/conditionOperator";
 import Field from "../../../src/models/request/field";
 import queryDataResultsObjectMother from "../../utils/objectMothers/domain/queryDataResultsObjectMother";
 import summarizeResponseObjectMother from "../../utils/objectMothers/models/reponse/summarizeResponseObjectMother";
@@ -19,8 +20,8 @@ describe('aidboxReponseProcessor tests', () => {
         // ARRANGE
         const queryDataResults = queryDataResultsObjectMother.get();
 
-        const selectorA = selectorObjectMother.get('Patient', 'patient', [], []);
-        const selectorB = selectorObjectMother.get('Observation', 'observation', [], []);
+        const selectorA = selectorObjectMother.get('Patient', 'patient', [], {conditionOperator:ConditionOperator.and, conditions:[]});
+        const selectorB = selectorObjectMother.get('Observation', 'observation', [], {conditionOperator:ConditionOperator.and, conditions:[]});
 
         const summarizeRequest = summarizeRequestBodyObjectMother.get([selectorA, selectorB], options);
 

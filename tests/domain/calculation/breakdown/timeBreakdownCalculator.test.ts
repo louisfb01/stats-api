@@ -1,4 +1,5 @@
 import timeBreakdownCalculator from "../../../../src/domain/calculation/breakdown/timeBreakdownCalculator";
+import { ConditionOperator } from "../../../../src/models/request/conditionOperator";
 import queryDataResultsObjectMother from "../../../utils/objectMothers/domain/queryDataResultsObjectMother";
 import fieldObjectMother from "../../../utils/objectMothers/models/fieldObjectMother"
 import breakdownObjectMother from "../../../utils/objectMothers/models/request/breakdownObjectMother";
@@ -10,7 +11,7 @@ describe('timeBreakdownCalculator tests', () => {
 
     it('with two results, time slices fit perfectly, gets count and start periods', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [field], [], undefined);
+        const selector = selectorObjectMother.get('Patient', 'patient', [field], {conditionOperator:ConditionOperator.and, conditions:[]}, undefined);
         const selectorBreakdown = getBreakdown(1209600, '2011-04-14', '2011-04-28');
         const queryResult = getQueryAndResult([
             { period_start: '2011-04-14T00:00:00Z', count_in_period: 6 },
@@ -32,7 +33,7 @@ describe('timeBreakdownCalculator tests', () => {
 
     it('with two results, results under six, count are null', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [field], [], undefined);
+        const selector = selectorObjectMother.get('Patient', 'patient', [field], {conditionOperator:ConditionOperator.and, conditions:[]}, undefined);
         const selectorBreakdown = getBreakdown(1209600, '2011-04-14', '2011-04-28');
         const queryResult = getQueryAndResult([
             { period_start: '2011-04-14T00:00:00Z', count_in_period: 5 },
@@ -54,7 +55,7 @@ describe('timeBreakdownCalculator tests', () => {
 
     it('with two results, time slices after first result, gets count and start periods', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [field], [], undefined);
+        const selector = selectorObjectMother.get('Patient', 'patient', [field], {conditionOperator:ConditionOperator.and, conditions:[]}, undefined);
         const selectorBreakdown = getBreakdown(1209600, '2011-04-15', '2011-04-28');
         const queryResult = getQueryAndResult([
             { period_start: '2011-04-14T00:00:00Z', count_in_period: 6 },
@@ -76,7 +77,7 @@ describe('timeBreakdownCalculator tests', () => {
 
     it('with one results, time slices after before first result, gets count and start periods and null for result in empty period', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [field], [], undefined);
+        const selector = selectorObjectMother.get('Patient', 'patient', [field], {conditionOperator:ConditionOperator.and, conditions:[]}, undefined);
         const selectorBreakdown = getBreakdown(1209600, '2011-04-15', '2011-04-28');
         const queryResult = getQueryAndResult([
             { period_start: '2011-04-28T00:00:00Z', count_in_period: 7 }]);
@@ -97,7 +98,7 @@ describe('timeBreakdownCalculator tests', () => {
 
     it('with three results, time slice before and after results, whole between results, fills all holes', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [field], [], undefined);
+        const selector = selectorObjectMother.get('Patient', 'patient', [field], {conditionOperator:ConditionOperator.and, conditions:[]}, undefined);
         const selectorBreakdown = getBreakdown(86400, '2011-04-13', '2011-04-20')
         const queryResult = getQueryAndResult([
             { period_start: '2011-04-14T00:00:00Z', count_in_period: 7 },

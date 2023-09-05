@@ -11,6 +11,7 @@ import Field from "../../../../../src/models/request/field";
 import ContinuousMesure from "../../../../../src/models/continuousMeasure";
 import CategoricalMesure from "../../../../../src/models/categoricalMeasure";
 import Measures from "../../../../../src/models/request/measures";
+import { ConditionOperator } from "../../../../../src/models/request/conditionOperator";
 
 describe('continuousTotalQuery tests', () => {
     const ageField = fieldObjectMother.get('age', 'age', 'integer');
@@ -32,7 +33,7 @@ describe('continuousTotalQuery tests', () => {
 
     it('With field and no filter, groups by field', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [genderField], []);
+        const selector = selectorObjectMother.get('Patient', 'patient', [genderField], {conditionOperator:ConditionOperator.and, conditions:[]});
         const fieldTypes = getFieldsMap([genderField], [stringFieldInfo])
 
         // ACT
@@ -51,7 +52,7 @@ describe('continuousTotalQuery tests', () => {
 
     it('With age computed field and no filter, groups by field with WHERE filter', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [ageField], []);
+        const selector = selectorObjectMother.get('Patient', 'patient', [ageField], {conditionOperator:ConditionOperator.and, conditions:[]});
         const fieldTypes = getFieldsMap([ageField], [integerFieldInfo])
 
         // ACT
@@ -72,7 +73,7 @@ describe('continuousTotalQuery tests', () => {
 
     it('With field and filter, groups by field with WHERE filter', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [genderField], [femaleGenderFilter]);
+        const selector = selectorObjectMother.get('Patient', 'patient', [genderField], {conditionOperator:ConditionOperator.and, conditions:[femaleGenderFilter]});
         const fieldTypes = getFieldsMap([genderField], [stringFieldInfo])
 
         // ACT

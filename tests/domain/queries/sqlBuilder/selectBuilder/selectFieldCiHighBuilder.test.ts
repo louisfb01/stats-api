@@ -1,6 +1,7 @@
 import selectFieldCiHighBuilder from "../../../../../src/domain/queries/sqlBuilder/selectBuilder/selectFieldCiHighBuilder";
 import resourceArrayFields from "../../../../../src/domain/resourceArrayFields";
 import FieldInfo from "../../../../../src/models/fieldInfo";
+import { ConditionOperator } from "../../../../../src/models/request/conditionOperator";
 import Field from "../../../../../src/models/request/field";
 import fieldInfoObjectMother from "../../../../utils/objectMothers/models/fieldInfoObjectMother";
 import fieldObjectMother from "../../../../utils/objectMothers/models/fieldObjectMother";
@@ -17,7 +18,7 @@ describe('selectFieldCiHighBuilder tests', () => {
     it('gets sum of json field as field with fields path . replaced with _ and subquery name', () => {
         // ARRANGE
         const field = fieldObjectMother.get('gender', 'gender', 'string');
-        const patientSelector = selectorObjectMother.get('Patient', 'patient', [field], []);
+        const patientSelector = selectorObjectMother.get('Patient', 'patient', [field], {conditionOperator:ConditionOperator.and, conditions:[]});
         const fieldTypes = getFieldMap([field], [stringFieldInfo]);
 
         // ACT
@@ -30,7 +31,7 @@ describe('selectFieldCiHighBuilder tests', () => {
     it('with array field, gets json field array formatted as field with fields path . replaced with _ and subquery name', () => {
         // ARRANGE
         const field = fieldObjectMother.get('address.country.name', 'country', 'string');
-        const patientSelector = selectorObjectMother.get('Patient', 'patient', [field], []);
+        const patientSelector = selectorObjectMother.get('Patient', 'patient', [field], {conditionOperator:ConditionOperator.and, conditions:[]});
         const fieldTypes = getFieldMap([field], [stringFieldInfo]);
 
         resourceArrayFields.values = ['address.country'];
@@ -45,7 +46,7 @@ describe('selectFieldCiHighBuilder tests', () => {
     it('gets age field from calculated fields', () => {
         // ARRANGE
         const field = fieldObjectMother.get('age', 'age', 'integer');
-        const patientSelector = selectorObjectMother.get('Patient', 'patient', [field], []);
+        const patientSelector = selectorObjectMother.get('Patient', 'patient', [field], {conditionOperator:ConditionOperator.and, conditions:[]});
         const fieldTypes = getFieldMap([field], [integerFieldInfo]);
 
         // ACT

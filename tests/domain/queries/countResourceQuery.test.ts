@@ -7,13 +7,14 @@ import filterObjectMother from "../../utils/objectMothers/models/filterObjectMot
 import selectorObjectMother from "../../utils/objectMothers/models/selectorObjectMother";
 import resourceArrayFields from "../../../src/domain/resourceArrayFields";
 import Field from "../../../src/models/request/field";
+import { ConditionOperator } from "../../../src/models/request/conditionOperator";
 
 describe('countResourceQuery tests', () => {
 
     const femaleGenderFilter = filterObjectMother.get('gender', 'is', 'female', 'string');
     const stringFieldInfo = fieldInfoObjectMother.get('string');
 
-    const joinSelector = selectorObjectMother.get('Patient', 'patient', [], []);
+    const joinSelector = selectorObjectMother.get('Patient', 'patient', [], {conditionOperator:ConditionOperator.and, conditions:[]});
 
     const filterMaps = getFieldsMap([femaleGenderFilter], [stringFieldInfo]);
     
@@ -22,7 +23,7 @@ describe('countResourceQuery tests', () => {
 
     it('gets query with resource from', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [], [], joinSelector);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], {conditionOperator:ConditionOperator.and, conditions:[]}, joinSelector);
 
         // ACT
         const query = countResourceQuery.getQuery(selector, filterMaps, fieldMap);
@@ -39,7 +40,7 @@ describe('countResourceQuery tests', () => {
 
     it('gets query with filters applied', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [], [femaleGenderFilter], joinSelector);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], {conditionOperator:ConditionOperator.and, conditions:[femaleGenderFilter]}, joinSelector);
 
         // ACT
         const query = countResourceQuery.getQuery(selector, filterMaps, fieldMap);
@@ -58,7 +59,7 @@ describe('countResourceQuery tests', () => {
 
     it('escapes resource to avoid sql injections', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get("Patient'--drop", 'patient', [], []);
+        const selector = selectorObjectMother.get("Patient'--drop", 'patient', [], {conditionOperator:ConditionOperator.and, conditions:[]});
 
         // ACT
         const query = countResourceQuery.getQuery(selector, filterMaps, fieldMap);
@@ -69,7 +70,7 @@ describe('countResourceQuery tests', () => {
 
     it('gets query with cross join and filters applied when one field is array type', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [], [femaleGenderFilter], joinSelector);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], {conditionOperator:ConditionOperator.and, conditions:[femaleGenderFilter]}, joinSelector);
 
         resourceArrayFields.values = ['gender'];
 

@@ -1,4 +1,5 @@
 import resourceArrayFields from "../../../../../../src/domain/resourceArrayFields";
+import { ConditionOperator } from "../../../../../../src/models/request/conditionOperator";
 import crossJoinForLevelBuilderObjectMother from "../../../../../utils/objectMothers/domain/queries/sqlBuilder/fromBuilder/crossJoin/crossJoinForLevelBuilderObjectMother";
 import fieldObjectMother from "../../../../../utils/objectMothers/models/fieldObjectMother";
 import filterObjectMother from "../../../../../utils/objectMothers/models/filterObjectMother";
@@ -16,7 +17,7 @@ describe('CrossJoinForLevelBuilder tests', () => {
 
     it('with no filter, has no remaining path to build', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [], []);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], {conditionOperator:ConditionOperator.and, conditions:[]});
         const builder = crossJoinForLevelBuilderObjectMother.get(selector);
 
         // ACT
@@ -28,7 +29,7 @@ describe('CrossJoinForLevelBuilder tests', () => {
 
     it('with filter, no array in filter, has no remaining path to build', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [], [cityFilter]);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], {conditionOperator:ConditionOperator.and, conditions:[cityFilter]});
         const builder = crossJoinForLevelBuilderObjectMother.get(selector);
 
         // ACT
@@ -40,7 +41,7 @@ describe('CrossJoinForLevelBuilder tests', () => {
 
     it('with two filters, one array in each, builds in one level', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [], [maleGenderFilter, cityFilter]);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], {conditionOperator:ConditionOperator.and, conditions:[maleGenderFilter, cityFilter]});
         const builder = crossJoinForLevelBuilderObjectMother.get(selector);
 
         resourceArrayFields.values = ['gender', 'address'];
@@ -56,7 +57,7 @@ describe('CrossJoinForLevelBuilder tests', () => {
     it('with one filter and field, one array in each, builds in one level', () => {
         // ARRANGE
         const genderField = fieldObjectMother.get('gender', 'gender', 'string')
-        const selector = selectorObjectMother.get('Patient', 'patient', [], [cityFilter]);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], {conditionOperator:ConditionOperator.and, conditions:[cityFilter]});
         const builder = crossJoinForLevelBuilderObjectMother.get(selector, genderField);
 
         resourceArrayFields.values = ['gender', 'address'];
@@ -71,7 +72,7 @@ describe('CrossJoinForLevelBuilder tests', () => {
 
     it('with two filters, one array in each, array of each yield same field, field is only included once', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [], [cityFilter, countryFilter]);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], {conditionOperator:ConditionOperator.and, conditions:[cityFilter, countryFilter]});
         const builder = crossJoinForLevelBuilderObjectMother.get(selector);
 
         resourceArrayFields.values = ['gender', 'address'];
@@ -87,7 +88,7 @@ describe('CrossJoinForLevelBuilder tests', () => {
     it('with two filters and field, one array in each, array of each yield same field, field is only included once', () => {
         // ARRANGE
         const cityField = fieldObjectMother.get('address.city', 'city', 'string')
-        const selector = selectorObjectMother.get('Patient', 'patient', [], [cityFilter, countryFilter]);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], {conditionOperator:ConditionOperator.and, conditions:[cityFilter, countryFilter]});
         const builder = crossJoinForLevelBuilderObjectMother.get(selector, cityField);
 
         resourceArrayFields.values = ['gender', 'address'];
@@ -102,7 +103,7 @@ describe('CrossJoinForLevelBuilder tests', () => {
 
     it('with two filters, array in second, builds in one level with only filter that has array', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [], [maleGenderFilter, cityFilter]);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], {conditionOperator:ConditionOperator.and, conditions:[maleGenderFilter, cityFilter]});
         const builder = crossJoinForLevelBuilderObjectMother.get(selector);
 
         resourceArrayFields.values = ['address'];
@@ -118,7 +119,7 @@ describe('CrossJoinForLevelBuilder tests', () => {
 
     it('with two filters, same field in filter, filter is only once in cross join', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [], [maleGenderFilter, femaleGenderFilter]);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], {conditionOperator:ConditionOperator.and, conditions:[maleGenderFilter, femaleGenderFilter]});
         const builder = crossJoinForLevelBuilderObjectMother.get(selector);
 
         resourceArrayFields.values = ['gender'];
@@ -134,7 +135,7 @@ describe('CrossJoinForLevelBuilder tests', () => {
 
     it('with two arrays in filter, builds in two level', () => {
         // ARRANGE
-        const selector = selectorObjectMother.get('Patient', 'patient', [], [maleGenderFilter, cityFilter]);
+        const selector = selectorObjectMother.get('Patient', 'patient', [], {conditionOperator:ConditionOperator.and, conditions:[maleGenderFilter, cityFilter]});
         const builder = crossJoinForLevelBuilderObjectMother.get(selector);
 
         resourceArrayFields.values = ['address', 'address.city'];

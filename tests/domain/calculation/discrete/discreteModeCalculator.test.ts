@@ -1,5 +1,6 @@
 import discreteModeCalculator from "../../../../src/domain/calculation/discrete/discreteModeCalculator";
 import CategoricalMesure from "../../../../src/models/categoricalMeasure";
+import { ConditionOperator } from "../../../../src/models/request/conditionOperator";
 import queryDataResultsObjectMother from "../../../utils/objectMothers/domain/queryDataResultsObjectMother";
 import fieldObjectMother from "../../../utils/objectMothers/models/fieldObjectMother"
 import selectorObjectMother from "../../../utils/objectMothers/models/selectorObjectMother";
@@ -8,7 +9,7 @@ describe('discreteModeCalculator tests', () => {
     const field = fieldObjectMother.get('gender', 'gender', 'string');
     const complexPathField = fieldObjectMother.get('path.complex', 'label', 'type');
     const fieldWithCaps = fieldObjectMother.get('path.Complex', 'label', 'type');
-    const selector = selectorObjectMother.get('Patient', 'patient', [field], []);
+    const selector = selectorObjectMother.get('Patient', 'patient', [field], {conditionOperator:ConditionOperator.and, conditions:[]});
     const measure = CategoricalMesure.mode;
 
 

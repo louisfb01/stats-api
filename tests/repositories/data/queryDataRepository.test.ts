@@ -6,6 +6,7 @@ import measuresObjectMother from "../../utils/objectMothers/models/request/measu
 import summarizeRequestBodyObjectMother from "../../utils/objectMothers/models/request/summarizeRequestBodyObjectMother";
 import selectorObjectMother from "../../utils/objectMothers/models/selectorObjectMother";
 import Filter from "../../../src/models/request/filter";
+import { ConditionOperator } from "../../../src/models/request/conditionOperator";
 
 describe('summarizeDataQueryExecutor tests', () => {
     const measures = measuresObjectMother.getAllOptionMeasures();
@@ -18,8 +19,8 @@ describe('summarizeDataQueryExecutor tests', () => {
 
     it('Processes each requests for selectors', async () => {
         // ARRANGE
-        const selectorA = selectorObjectMother.get('Patient', 'patient', [], []);
-        const selectorB = selectorObjectMother.get('Observation', 'observation', [], []);
+        const selectorA = selectorObjectMother.get('Patient', 'patient', [], {conditionOperator:ConditionOperator.and, conditions:[]});
+        const selectorB = selectorObjectMother.get('Observation', 'observation', [], {conditionOperator:ConditionOperator.and, conditions:[]});
 
         const request = summarizeRequestBodyObjectMother.get([selectorA, selectorB], { measures });
 
