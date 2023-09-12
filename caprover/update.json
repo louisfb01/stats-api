@@ -2,7 +2,7 @@
     "appName": "stats-api",
     "instanceCount": 1,
     "notExposeAsWebApp": true,
-    "forceSsl": true,
+    "forceSsl": false,
     "envVars": [
         {
             "key": "CODA_FHIR_STORE_URL",
